@@ -1,0 +1,288 @@
+{
+  "$schema": "https://rawgit.com/mzernetsch/jrgen/master/jrgen-spec.schema.json",
+  "jrgen": "1.1",
+  "jsonrpc": "2.0",
+  "info": {
+    "title": "Example API",
+    "description": [
+      "An example api which handles various rpc requests.",
+      "This api follows the json-rpc 2.0 specification. More information available at http://www.jsonrpc.org/specification."
+    ],
+    "version": "1.0"
+  },
+  "definitions": {
+    "session": {
+      "type": "object",
+      "properties": {
+        "session_token": {
+          "description": "Bearer token of the created session.",
+          "examples": ["123456890"],
+          "type": "string",
+          "minLength": 1
+        },
+        "validity": {
+          "description": "Validity of the session token in seconds.",
+          "examples": [3600],
+          "type": "number",
+          "multipleOf": 1
+        }
+      },
+      "required": ["session_token"]
+    }
+  },
+  "methods": {
+    "Session.Login": {
+      "summary": "Creates a new session.",
+      "description": "Authenticates the user using the provided credentials and creates a new session.",
+      "tags": ["Session"],
+      "params": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Name of the user to create a session for.",
+            "examples": ["admin"],
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "description": "Password of the user to create a session for.",
+            "examples": ["123456"],
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["name", "password"]
+      },
+      "result": {
+        "$ref": "#/definitions/session"
+      },
+      "errors": [
+        {
+          "description": "The provided credentials are invalid.",
+          "code": 1,
+          "message": "InvalidCredentials"
+        }
+      ]
+    },
+    "Session.Logout": {
+      "summary": "Destroys an existing session.",
+      "tags": ["Session"],
+      "result": {
+        "description": "Always '0'.",
+        "examples": [0],
+        "type": "number",
+        "minimum": 0,
+        "maximum": 0
+      },
+      "errors": [
+        {
+          "description": "Session could not be found.",
+          "code": 2,
+          "message": "NotFound"
+        }
+      ]
+    },
+    "Session.KeepAlive": {
+      "summary": "Refreshs an existing session.",
+      "description": "Refreshs an existing session so that it keeps alive and doesn't time out. This method does nothing but refreshing the timeout.",
+      "tags": ["Session"],
+      "result": {
+        "description": "Always '0'.",
+        "examples": [0],
+        "type": "number",
+        "minimum": 0,
+        "maximum": 0
+      },
+      "errors": [
+        {
+          "description": "Session could not be found.",
+          "code": 2,
+          "message": "NotFound"
+        }
+      ]
+    },
+    "User.Add": {
+      "summary": "Adds a new user.",
+      "tags": ["User"],
+      "params": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Name of the user to add.",
+            "examples": ["user"],
+            "anyOf": [
+              { "type": "string", "minLength": 1 },
+              { "type": "number", "multipleOf": 1 }
+            ]
+          },
+          "email": {
+            "description": "Email of the user to add.",
+            "examples": ["user@example.org"],
+            "type": "string",
+            "allOf": [{ "type": "string", "format": "email" }]
+          },
+          "address": {
+            "description": "Address of the user to add.",
+            "type": "array",
+            "items": [
+              {
+                "description": "Address number.",
+                "examples": [1600],
+                "type": "number",
+                "minimum": 1
+              },
+              {
+                "description": "Name of the street.",
+                "examples": ["Pennsylvania"],
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "description": "Type of the street.",
+                "examples": ["Avenue"],
+                "type": "string",
+                "enum": ["Street", "Avenue", "Boulevard"]
+              },
+              {
+                "description": "City quadrant of the address",
+                "examples": ["NW"],
+                "type": "string",
+                "enum": ["NW", "NE", "SW", "SE"]
+              }
+            ]
+          },
+          "password": {
+            "description": "Password of the user to add.",
+            "examples": ["1234567890"],
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["name", "email", "password"]
+      },
+      "result": {
+        "description": "Always '0'.",
+        "examples": [0],
+        "type": "number",
+        "minimum": 0,
+        "maximum": 0
+      },
+      "errors": [
+        {
+          "description": "A user with that name already exists.",
+          "code": 3,
+          "message": "Already exists"
+        }
+      ]
+    },
+    "User.Delete": {
+      "summary": "Deletes an existing user.",
+      "tags": ["User"],
+      "params": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "description": "Name of the user to delete.",
+                "examples": ["user"],
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^(A|B)\\-.*$"
+              }
+            },
+            "required": ["name"]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "description": "Id of the user to delete.",
+                "examples": ["1"],
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": ["id"]
+          }
+        ]
+      },
+      "result": {
+        "description": "Always '0'.",
+        "examples": [0],
+        "type": "number",
+        "minimum": 0,
+        "maximum": 0
+      },
+      "errors": [
+        {
+          "description": "A user with that name could not be found.",
+          "code": 2,
+          "message": "Not found"
+        }
+      ]
+    },
+    "User.GetAll": {
+      "summary": "Returns all users.",
+      "description": "This method returns an array with information about all existing users.",
+      "tags": ["User"],
+      "result": {
+        "description": "List of all existing users.",
+        "type": "array",
+        "items": {
+          "description": "Information about a user.",
+          "type": "object",
+          "properties": {
+            "name": {
+              "description": "Name of the user.",
+              "examples": ["user"],
+              "type": "string",
+              "minLength": 1
+            },
+            "email": {
+              "description": "Email of the user.",
+              "examples": ["user@example.org"],
+              "type": "string",
+              "format": "email"
+            },
+            "address": {
+              "description": "Address of the user to add.",
+              "type": "array",
+              "items": [
+                {
+                  "name": "number",
+                  "description": "Address number.",
+                  "examples": [1600],
+                  "type": "number",
+                  "minimum": 1
+                },
+                {
+                  "name": "street_name",
+                  "description": "Name of the street.",
+                  "examples": ["Pennsylvania"],
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "name": "street_type",
+                  "description": "Type of the street.",
+                  "examples": ["Avenue"],
+                  "type": "string",
+                  "enum": ["Street", "Avenue", "Boulevard"]
+                },
+                {
+                  "name": "direction",
+                  "description": "City quadrant of the address",
+                  "examples": ["NW"],
+                  "type": "string",
+                  "enum": ["NW", "NE", "SW", "SE"]
+                }
+              ]
+            }
+          },
+          "required": ["name", "email", "address"]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{title}}</title>
+
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="C:\Users\white\Documents\jrgen-master\jrgen-editor\src\index.js"></script>
+    <!-- <script src="C:\Users\white\Documents\jrgen-master\jrgen-master\editor\src\index.js"></script>
+    <script src="C:\Users\white\Documents\jrgen-master\jrgen-master\editor\src\doc-html-blueprint.js"></script> -->
+
+
+    
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+      integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.27.0/min/vs/loader.js"></script>
+
+    <style>
+      h4 {
+        display: inline;
+      }
+
+      p {
+        word-wrap: break-word;
+      }
+
+      .sidenav,
+      .content {
+        overflow-y: auto;
+        height: calc(100vh - 57px);
+        max-height: calc(100vh - 57px);
+      }
+
+      .sidenav {
+        padding: 0;
+        display: flex;
+        flex-wrap: nowrap;
+        flex-direction: column;
+        justify-content: start;
+        align-items: stretch;
+        align-content: start
+      }
+
+      #toc {
+        overflow-y: auto;
+      }
+
+      .card {
+        margin-bottom: 15px;
+      }
+
+      .card-header {
+        cursor: pointer;
+      }
+
+      .content,
+      .card-block,
+      .search-form {
+        padding: 15px;
+      }
+
+      .nav-link {
+        color: #343a40 !important;
+      }
+
+      .nav-pills .nav-link.active,
+      .nav-pills .show > .nav-link {
+        color: #f8f9fa !important;
+        background-color: #343a40 !important;
+      }
+
+      .card.disabled, .nav-link.disabled {
+        opacity: 0.5;
+      }
+    </style>
+  </head>
+
+  <body class="bg-light" id="app">
+    <nav
+      class="navbar navbar-dark bg-dark justify-content-between sticky-top border-bottom">
+      <a class="navbar-brand">API X Version Y</a>
+      <button onclick="getEditorVal()">SAVE</button>
+    </nav>
+  
+    <div class="container-fluid">
+
+      <div class="row">
+        <div class="editor col-5 bg-black border-right" id="editor"></div>
+
+        <div class="sidenav col-1 bg-white border-right">
+          <form class="search-form border-bottom" onsubmit="return false">
+            <input class="form-control search-input" type="search" placeholder="Search" />
+          </form>
+
+          <nav id="toc">
+            <ul class="nav nav-pills flex-column">
+              <li class="nav-item" v-for="method in data" :key="method.id">
+                <a class="nav-link" :href="'#' + method.id">{{ method.name }}</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <div class="content col-6" data-spy="scroll" data-target="#toc">
+          <div class="card border">
+            <div class="card-block">description</div>
+          </div>
+
+
+          <div class="card method" :id="'#' + method.id" v-for="method in data">
+            <div class="card-header text-light bg-dark" data-toggle="collapse" >
+              <h4>
+                <span>{{method.name}}</span>
+
+                <div class="float-right">
+                  <!-- {{#tags}} -->
+                  <span class="badge badge-light"></span>
+                  <!-- {{/tags}} -->
+                </div>
+              </h4>
+            </div>
+
+            <div class="card-block collapse show">
+
+              <p>{{method.summary}}</p>
+
+              <p>{{method.description}}</p>
+
+
+              <hr />
+
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-8 border-right">
+                    <h5>Parameters</h5>
+                    <div class="table-responsive" >
+                      <table class="table table-striped table-hover table-sm">
+                        <tr>
+                          <th>Name</th>
+                          <th>Type</th>
+                          <th>Constraints</th>
+                          <th>Description</th>
+                        </tr>
+
+                        <tr v-for="par in method.params">
+                          <td>{{par.name}}</td>
+                          <td>{{par.type}}</td>
+                          <td>{{par.constraints}}</td>
+                          <td>{{par.description}}</td>
+                        </tr>
+
+                      </table>
+                    </div>
+                    
+                    <h5>Result</h5>
+                    <div class="table-responsive">
+                      <table class="table table-striped table-hover table-sm">
+                        <tr>
+                          <th>Name</th>
+                          <th>Type</th>
+                          <th>Constraints</th>
+                          <th>Description</th>
+                        </tr>
+                        <tr>
+                          <td>{{method.result[0].name}}</td>
+                          <td>{{method.type}}</td>
+                          <td>{{method.constraints}}</td>
+                          <td>{{method.description}}</td>
+                        </tr>
+
+                      </table>
+                    </div>
+
+                    
+
+                    <h5>Errors</h5>
+                    <!-- <div class="table-responsive">
+                      <table class="table table-striped table-hover table-sm">
+                        <tr>
+                          <th>Code</th>
+                          <th>Message</th>
+                          <th>Description</th>
+                        </tr>
+                        {{#errors}}
+                        <tr>
+                          <td>{{code}}</td>
+                          <td>{{message}}</td>
+                          <td>{{{description}}}</td>
+                        </tr>
+                        {{/errors}}
+                      </table>
+                    </div>
+                    {{/errors.length}} -->
+
+                  </div>
+
+                  <div class="col-4">
+                    <h5>Request example</h5>
+                    <pre class="bg-light">{{method.requestExample}}</pre>
+
+                    <h5>Response example</h5>
+                    <pre class="bg-light">{{method.responseExample}}</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+
+      $.expr[":"].contains = $.expr.createPseudo(function(arg) {
+        return function(elem) {
+          return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+        };
+      });
+
+      $(".search-input").on("paste keyup search", (event) => {
+        const inputValue = event.target.value;
+        
+        $(`a`).removeClass("disabled");
+
+        if(inputValue) {
+          $(`.card.method:contains("${inputValue}")`).removeClass("disabled");
+          $(`.card.method:contains("${inputValue}") .collapse`).collapse("show");
+          $(`.card.method:not(:contains("${inputValue}"))`).addClass("disabled");
+          $(`.card.method:not(:contains("${inputValue}")) .collapse`).collapse("hide");
+          $(`.card.method:not(:contains("${inputValue}"))`).each((index, element) => {
+           $(`a[href='#${element.id}']`).addClass("disabled");
+          });
+
+          document.querySelector('.card.method:not(.disabled)').scrollIntoView();
+        }
+        else {
+          $(".card.method").removeClass("disabled");
+          $(".card.method .collapse").collapse("show");
+        }
+      });
+      const init_schema = {
+  "$schema": "https://rawgit.com/mzernetsch/jrgen/master/jrgen-spec.schema.json",
+  "jrgen": "1.1",
+  "jsonrpc": "2.0",
+  "info": {
+    "title": "Example API",
+    "description": [
+      "An example api which handles various rpc requests.",
+      "This api follows the json-rpc 2.0 specification. More information available at http://www.jsonrpc.org/specification."
+    ],
+    "version": "1.0"
+  },
+  "definitions": {
+    "session": {
+      "type": "object",
+      "properties": {
+        "session_token": {
+          "description": "Bearer token of the created session.",
+          "examples": ["123456890"],
+          "type": "string",
+          "minLength": 1
+        },
+        "validity": {
+          "description": "Validity of the session token in seconds.",
+          "examples": [3600],
+          "type": "number",
+          "multipleOf": 1
+        }
+      },
+      "required": ["session_token"]
+    }
+  },
+  "methods": {
+    "Session.Login": {
+      "summary": "Creates a new session.",
+      "description": "Authenticates the user using the provided credentials and creates a new session.",
+      "tags": ["Session"],
+      "params": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Name of the user to create a session for.",
+            "examples": ["admin"],
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "description": "Password of the user to create a session for.",
+            "examples": ["123456"],
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["name", "password"]
+      },
+      "result": {
+        "$ref": "#/definitions/session"
+      },
+      "errors": [
+        {
+          "description": "The provided credentials are invalid.",
+          "code": 1,
+          "message": "InvalidCredentials"
+        }
+      ]
+    },
+    "Session.Logout": {
+      "summary": "Destroys an existing session.",
+      "tags": ["Session"],
+      "result": {
+        "description": "Always '0'.",
+        "examples": [0],
+        "type": "number",
+        "minimum": 0,
+        "maximum": 0
+      },
+      "errors": [
+        {
+          "description": "Session could not be found.",
+          "code": 2,
+          "message": "NotFound"
+        }
+      ]
+    },
+    "Session.KeepAlive": {
+      "summary": "Refreshs an existing session.",
+      "description": "Refreshs an existing session so that it keeps alive and doesn't time out. This method does nothing but refreshing the timeout.",
+      "tags": ["Session"],
+      "result": {
+        "description": "Always '0'.",
+        "examples": [0],
+        "type": "number",
+        "minimum": 0,
+        "maximum": 0
+      },
+      "errors": [
+        {
+          "description": "Session could not be found.",
+          "code": 2,
+          "message": "NotFound"
+        }
+      ]
+    },
+    "User.Add": {
+      "summary": "Adds a new user.",
+      "tags": ["User"],
+      "params": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Name of the user to add.",
+            "examples": ["user"],
+            "anyOf": [
+              { "type": "string", "minLength": 1 },
+              { "type": "number", "multipleOf": 1 }
+            ]
+          },
+          "email": {
+            "description": "Email of the user to add.",
+            "examples": ["user@example.org"],
+            "type": "string",
+            "allOf": [{ "type": "string", "format": "email" }]
+          },
+          "address": {
+            "description": "Address of the user to add.",
+            "type": "array",
+            "items": [
+              {
+                "description": "Address number.",
+                "examples": [1600],
+                "type": "number",
+                "minimum": 1
+              },
+              {
+                "description": "Name of the street.",
+                "examples": ["Pennsylvania"],
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "description": "Type of the street.",
+                "examples": ["Avenue"],
+                "type": "string",
+                "enum": ["Street", "Avenue", "Boulevard"]
+              },
+              {
+                "description": "City quadrant of the address",
+                "examples": ["NW"],
+                "type": "string",
+                "enum": ["NW", "NE", "SW", "SE"]
+              }
+            ]
+          },
+          "password": {
+            "description": "Password of the user to add.",
+            "examples": ["1234567890"],
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["name", "email", "password"]
+      },
+      "result": {
+        "description": "Always '0'.",
+        "examples": [0],
+        "type": "number",
+        "minimum": 0,
+        "maximum": 0
+      },
+      "errors": [
+        {
+          "description": "A user with that name already exists.",
+          "code": 3,
+          "message": "Already exists"
+        }
+      ]
+    },
+    "User.Delete": {
+      "summary": "Deletes an existing user.",
+      "tags": ["User"],
+      "params": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "description": "Name of the user to delete.",
+                "examples": ["user"],
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^(A|B)\\-.*$"
+              }
+            },
+            "required": ["name"]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "description": "Id of the user to delete.",
+                "examples": ["1"],
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": ["id"]
+          }
+        ]
+      },
+      "result": {
+        "description": "Always '0'.",
+        "examples": [0],
+        "type": "number",
+        "minimum": 0,
+        "maximum": 0
+      },
+      "errors": [
+        {
+          "description": "A user with that name could not be found.",
+          "code": 2,
+          "message": "Not found"
+        }
+      ]
+    },
+    "User.GetAll": {
+      "summary": "Returns all users.",
+      "description": "This method returns an array with information about all existing users.",
+      "tags": ["User"],
+      "result": {
+        "description": "List of all existing users.",
+        "type": "array",
+        "items": {
+          "description": "Information about a user.",
+          "type": "object",
+          "properties": {
+            "name": {
+              "description": "Name of the user.",
+              "examples": ["user"],
+              "type": "string",
+              "minLength": 1
+            },
+            "email": {
+              "description": "Email of the user.",
+              "examples": ["user@example.org"],
+              "type": "string",
+              "format": "email"
+            },
+            "address": {
+              "description": "Address of the user to add.",
+              "type": "array",
+              "items": [
+                {
+                  "name": "number",
+                  "description": "Address number.",
+                  "examples": [1600],
+                  "type": "number",
+                  "minimum": 1
+                },
+                {
+                  "name": "street_name",
+                  "description": "Name of the street.",
+                  "examples": ["Pennsylvania"],
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "name": "street_type",
+                  "description": "Type of the street.",
+                  "examples": ["Avenue"],
+                  "type": "string",
+                  "enum": ["Street", "Avenue", "Boulevard"]
+                },
+                {
+                  "name": "direction",
+                  "description": "City quadrant of the address",
+                  "examples": ["NW"],
+                  "type": "string",
+                  "enum": ["NW", "NE", "SW", "SE"]
+                }
+              ]
+            }
+          },
+          "required": ["name", "email", "address"]
+        }
+      }
+    }
+  }
+}
+
+      var data = build_data(init_schema)
+      require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.27.0/min/vs' }});
+      // var editor
+      require(['vs/editor/editor.main'], function() {
+          editor = monaco.editor.create(document.getElementById('editor'), {
+          value: JSON.stringify(init_schema),
+          language: 'json',
+          scrollbar:{
+            vertical:'auto',
+            horizontal:'auto'
+          },
+          theme:'vs-dark',
+          automaticLayout:true
+        });
+          editor.getAction('editor.action.formatDocument').run()
+      });
+      // editor.getAction('editor.action.formatDocument')
+      // editor.setValue(data)
+      function getEditorVal(){
+        schema = editor.getValue()
+        schema = JSON.parse(schema)
+        app.data = build_data(schema)
+        console.log(editor.getValue())
+      }
+      const api_doc = {
+        data(){
+          return{
+            data
+          }
+        }
+      }
+
+      window.app = Vue.createApp(api_doc).mount("#app")
+    </script>
+    
+
+  </body>
+</html>

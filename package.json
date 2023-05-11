@@ -1,0 +1,50 @@
+{
+  "name": "jrgen",
+  "version": "1.0.0",
+  "description": "Generates docs, tests, clients and servers for json-rpc apis.",
+  "keywords": [
+    "generator",
+    "json-rpc",
+    "api",
+    "doc",
+    "test",
+    "client",
+    "server",
+    "editor"
+  ],
+  "author": "Marco Zernetsch <m.zernetsch@gmail.com>",
+  "license": "MIT",
+  "bin": "./src/jrgen.js",
+  "bugs": "https://github.com/mzernetsch/jrgen/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mzernetsch/jrgen.git"
+  },
+  "scripts": {
+    "build:examples": "npm run clear:examples && node ./scripts/create-examples.js",
+    "clear:examples": "node ./scripts/clear-examples.js",
+    "format": "prettier --write src/**/*.{js,ts,css,scss,json,md}",
+    "build-webpack": "webpack --mode production"
+  },
+  "dependencies": {
+    "commander": "^9.1.0",
+    "fs-extra": "^10.0.1",
+    "glob": "^7.2.0",
+    "http": "^0.0.1-security",
+    "https-browserify": "^1.0.0",
+    "json-schema-ref-parser": "^9.0.9",
+    "json-schema-to-typescript": "^9.0.0",
+    "monaco-editor": "^0.38.0",
+    "mustache": "^4.2.0",
+    "prettier": "^2.6.2",
+    "url": "^0.11.0",
+    "util": "^0.12.5",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "path-browserify": "^1.0.1",
+    "semantic-release": "^19.0.2",
+    "webpack": "^5.82.1",
+    "webpack-cli": "^5.1.1"
+  }
+}
