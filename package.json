@@ -12,13 +12,13 @@
     "server",
     "editor"
   ],
-  "author": "Marco Zernetsch <m.zernetsch@gmail.com>",
+  "author": "Corbin White <white.corbin91@gmail.com>",
   "license": "MIT",
   "bin": "./src/jrgen.js",
-  "bugs": "https://github.com/mzernetsch/jrgen/issues",
+  "bugs": "https://github.com/Ethereotek/jrgen-editor/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mzernetsch/jrgen.git"
+    "url": "https://github.com/Ethereotek/jrgen-editor.git"
   },
   "scripts": {
     "build:examples": "npm run clear:examples && node ./scripts/create-examples.js",
