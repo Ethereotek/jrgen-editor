@@ -36,7 +36,9 @@
     "json-schema-to-typescript": "^9.0.0",
     "monaco-editor": "^0.38.0",
     "mustache": "^4.2.0",
+    "polka": "^0.5.2",
     "prettier": "^2.6.2",
+    "serve-static": "^1.15.0",
     "url": "^0.11.0",
     "util": "^0.12.5",
     "uuid": "^8.3.2"
