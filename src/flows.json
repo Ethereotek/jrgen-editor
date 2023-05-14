@@ -1,0 +1,183 @@
+[
+    {
+        "id": "3021c112b8f44a27",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "4635518bc1964064",
+        "type": "http in",
+        "z": "3021c112b8f44a27",
+        "name": "[GET] jrgen-editor",
+        "url": "/jrgen-editor",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 290,
+        "y": 240,
+        "wires": [
+            [
+                "d34c16fbfb248ea0"
+            ]
+        ]
+    },
+    {
+        "id": "9355fb15e97f3d55",
+        "type": "http in",
+        "z": "3021c112b8f44a27",
+        "name": "[GET] jrgen-editor/artifact.json",
+        "url": "/jrgen-editor/artifact.json",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 330,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3377cfa5cc17f960",
+        "type": "file",
+        "z": "3021c112b8f44a27",
+        "name": "[WRITE] schema.json",
+        "filename": "/data/jrgen-editor/schema.json",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 600,
+        "y": 560,
+        "wires": [
+            [
+                "1f6b16cea7ffc246"
+            ]
+        ]
+    },
+    {
+        "id": "1f6b16cea7ffc246",
+        "type": "http response",
+        "z": "3021c112b8f44a27",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 810,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "19255f70498417f2",
+        "type": "http in",
+        "z": "3021c112b8f44a27",
+        "name": "[GET] index.js",
+        "url": "/index.js",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 310,
+        "y": 280,
+        "wires": [
+            [
+                "a3ebdbed6833dffd"
+            ]
+        ]
+    },
+    {
+        "id": "d34c16fbfb248ea0",
+        "type": "file in",
+        "z": "3021c112b8f44a27",
+        "name": "",
+        "filename": "/data/jrgen-editor/api-editor.html",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 610,
+        "y": 240,
+        "wires": [
+            [
+                "1f6b16cea7ffc246"
+            ]
+        ]
+    },
+    {
+        "id": "a3ebdbed6833dffd",
+        "type": "file in",
+        "z": "3021c112b8f44a27",
+        "name": "",
+        "filename": "/data/jrgen-editor/index.js",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 630,
+        "y": 280,
+        "wires": [
+            [
+                "1f6b16cea7ffc246"
+            ]
+        ]
+    },
+    {
+        "id": "b3e2756e03e01c73",
+        "type": "http in",
+        "z": "3021c112b8f44a27",
+        "name": "[PUT] jrgen-editor/schema.json",
+        "url": "/jrgen-editor/schema.json",
+        "method": "put",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 330,
+        "y": 560,
+        "wires": [
+            [
+                "3377cfa5cc17f960"
+            ]
+        ]
+    },
+    {
+        "id": "1b6fbe11bf5fe54c",
+        "type": "http in",
+        "z": "3021c112b8f44a27",
+        "name": "[GET] jrgen-editor/schema.json",
+        "url": "/jrgen-editor/schema.json",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 330,
+        "y": 520,
+        "wires": [
+            [
+                "b2404c8ab272a2b3"
+            ]
+        ]
+    },
+    {
+        "id": "b2404c8ab272a2b3",
+        "type": "file in",
+        "z": "3021c112b8f44a27",
+        "name": "[READ] schema.json",
+        "filename": "/data/jrgen-editor/schema.json",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 600,
+        "y": 520,
+        "wires": [
+            [
+                "1f6b16cea7ffc246"
+            ]
+        ]
+    }
+]

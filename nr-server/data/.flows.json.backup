@@ -2,25 +2,110 @@
     {
         "id": "3021c112b8f44a27",
         "type": "tab",
-        "label": "Flow 1",
+        "label": "Server",
         "disabled": false,
         "info": "",
         "env": []
     },
     {
+        "id": "5e37ef9d739b77e1",
+        "type": "group",
+        "z": "3021c112b8f44a27",
+        "name": "",
+        "style": {
+            "fill": "#e3f3d3",
+            "label": true
+        },
+        "nodes": [
+            "d469196f97d59f9e",
+            "6b93a23ee5c5bdbe",
+            "ae31c68b9033ac5d",
+            "92e8441ec9afb089",
+            "1148edfba1a538be",
+            "b5f0590235244293",
+            "e8741b97f3b16d68",
+            "fa12b4c4386720d3"
+        ],
+        "x": 74,
+        "y": 1139,
+        "w": 532,
+        "h": 342
+    },
+    {
+        "id": "f3e1e5f0afc6dd83",
+        "type": "group",
+        "z": "3021c112b8f44a27",
+        "name": "",
+        "style": {
+            "fill": "#e3f3d3",
+            "label": true
+        },
+        "nodes": [
+            "4635518bc1964064",
+            "19255f70498417f2",
+            "d34c16fbfb248ea0",
+            "a3ebdbed6833dffd",
+            "4ae2f24fedb8665c",
+            "f3ddbefc87aa4919",
+            "7a109816265008d6",
+            "330e491f0f811cf8",
+            "029409776332c8f2",
+            "716c37ef41124d96",
+            "1fc87b6260981378"
+        ],
+        "x": 74,
+        "y": 19,
+        "w": 612,
+        "h": 362
+    },
+    {
+        "id": "d655e1845c1c0605",
+        "type": "group",
+        "z": "3021c112b8f44a27",
+        "name": "",
+        "style": {
+            "fill": "#e3f3d3",
+            "label": true
+        },
+        "nodes": [
+            "9355fb15e97f3d55",
+            "3377cfa5cc17f960",
+            "b3e2756e03e01c73",
+            "1b6fbe11bf5fe54c",
+            "b2404c8ab272a2b3",
+            "b523048bb88a13a2",
+            "fb60e6ff2366e7fd",
+            "4dfefcdd5119b094",
+            "1a8aeb57cba02716",
+            "ea6e76c9ce43e476",
+            "b3904af4edd0efc3",
+            "0db68cb0f55ce6cc",
+            "40374a02d4524d66",
+            "8aad875e96bfd35c",
+            "495d88c2e35a38ab",
+            "6c692ac6214f308a"
+        ],
+        "x": 74,
+        "y": 519,
+        "w": 892,
+        "h": 522
+    },
+    {
         "id": "4635518bc1964064",
         "type": "http in",
         "z": "3021c112b8f44a27",
+        "g": "f3e1e5f0afc6dd83",
         "name": "[GET] jrgen-editor",
         "url": "/jrgen-editor",
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 290,
-        "y": 240,
+        "x": 270,
+        "y": 120,
         "wires": [
             [
-                "d34c16fbfb248ea0"
+                "d34c16fbfb248ea0",
+                "7a109816265008d6"
             ]
         ]
     },
@@ -28,13 +113,14 @@
         "id": "9355fb15e97f3d55",
         "type": "http in",
         "z": "3021c112b8f44a27",
+        "g": "d655e1845c1c0605",
         "name": "[GET] jrgen-editor/artifact.json",
         "url": "/jrgen-editor/artifact.json",
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 330,
-        "y": 460,
+        "x": 810,
+        "y": 620,
         "wires": [
             []
         ]
@@ -43,6 +129,7 @@
         "id": "3377cfa5cc17f960",
         "type": "file",
         "z": "3021c112b8f44a27",
+        "g": "d655e1845c1c0605",
         "name": "[WRITE] schema.json",
         "filename": "/data/jrgen-editor/schema.json",
         "filenameType": "str",
@@ -50,11 +137,11 @@
         "createDir": false,
         "overwriteFile": "true",
         "encoding": "none",
-        "x": 600,
-        "y": 560,
+        "x": 260,
+        "y": 960,
         "wires": [
             [
-                "1f6b16cea7ffc246"
+                "b3904af4edd0efc3"
             ]
         ]
     },
@@ -62,10 +149,10 @@
         "id": "1f6b16cea7ffc246",
         "type": "http response",
         "z": "3021c112b8f44a27",
-        "name": "",
+        "name": "Response",
         "statusCode": "",
         "headers": {},
-        "x": 810,
+        "x": 1070,
         "y": 260,
         "wires": []
     },
@@ -73,13 +160,14 @@
         "id": "19255f70498417f2",
         "type": "http in",
         "z": "3021c112b8f44a27",
+        "g": "f3e1e5f0afc6dd83",
         "name": "[GET] index.js",
         "url": "/index.js",
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 310,
-        "y": 280,
+        "x": 590,
+        "y": 120,
         "wires": [
             [
                 "a3ebdbed6833dffd"
@@ -87,26 +175,10 @@
         ]
     },
     {
-        "id": "5cdb896119fa3ec4",
-        "type": "debug",
-        "z": "3021c112b8f44a27",
-        "name": "debug 1",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 560,
-        "y": 460,
-        "wires": []
-    },
-    {
         "id": "d34c16fbfb248ea0",
         "type": "file in",
         "z": "3021c112b8f44a27",
+        "g": "f3e1e5f0afc6dd83",
         "name": "",
         "filename": "/data/jrgen-editor/api-editor.html",
         "filenameType": "str",
@@ -115,11 +187,11 @@
         "sendError": false,
         "encoding": "none",
         "allProps": false,
-        "x": 610,
-        "y": 240,
+        "x": 230,
+        "y": 160,
         "wires": [
             [
-                "1f6b16cea7ffc246"
+                "4ae2f24fedb8665c"
             ]
         ]
     },
@@ -127,6 +199,7 @@
         "id": "a3ebdbed6833dffd",
         "type": "file in",
         "z": "3021c112b8f44a27",
+        "g": "f3e1e5f0afc6dd83",
         "name": "",
         "filename": "/data/jrgen-editor/index.js",
         "filenameType": "str",
@@ -135,11 +208,11 @@
         "sendError": false,
         "encoding": "none",
         "allProps": false,
-        "x": 630,
-        "y": 280,
+        "x": 550,
+        "y": 160,
         "wires": [
             [
-                "1f6b16cea7ffc246"
+                "f3ddbefc87aa4919"
             ]
         ]
     },
@@ -147,16 +220,18 @@
         "id": "b3e2756e03e01c73",
         "type": "http in",
         "z": "3021c112b8f44a27",
+        "g": "d655e1845c1c0605",
         "name": "[PUT] jrgen-editor/schema.json",
         "url": "/jrgen-editor/schema.json",
         "method": "put",
         "upload": false,
         "swaggerDoc": "",
-        "x": 330,
-        "y": 560,
+        "x": 230,
+        "y": 920,
         "wires": [
             [
-                "3377cfa5cc17f960"
+                "3377cfa5cc17f960",
+                "6c692ac6214f308a"
             ]
         ]
     },
@@ -164,17 +239,17 @@
         "id": "1b6fbe11bf5fe54c",
         "type": "http in",
         "z": "3021c112b8f44a27",
+        "g": "d655e1845c1c0605",
         "name": "[GET] jrgen-editor/schema.json",
         "url": "/jrgen-editor/schema.json",
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 330,
-        "y": 520,
+        "x": 230,
+        "y": 620,
         "wires": [
             [
-                "b2404c8ab272a2b3",
-                "5cdb896119fa3ec4"
+                "b2404c8ab272a2b3"
             ]
         ]
     },
@@ -182,6 +257,7 @@
         "id": "b2404c8ab272a2b3",
         "type": "file in",
         "z": "3021c112b8f44a27",
+        "g": "d655e1845c1c0605",
         "name": "[READ] schema.json",
         "filename": "/data/jrgen-editor/schema.json",
         "filenameType": "str",
@@ -190,11 +266,863 @@
         "sendError": false,
         "encoding": "none",
         "allProps": false,
-        "x": 600,
-        "y": 520,
+        "x": 260,
+        "y": 660,
+        "wires": [
+            [
+                "4dfefcdd5119b094"
+            ]
+        ]
+    },
+    {
+        "id": "b523048bb88a13a2",
+        "type": "function",
+        "z": "3021c112b8f44a27",
+        "g": "d655e1845c1c0605",
+        "name": "get-method",
+        "func": "let requestedMethod = msg.req.query.method;\nlet methodSchema = msg.payload.methods[requestedMethod];\nif (methodSchema){\n    msg.payload = methodSchema;\n}else{\n    msg.payload = {\n        \"error\":`${requestedMethod} does not exist.`\n    }\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 270,
+        "y": 800,
+        "wires": [
+            [
+                "ea6e76c9ce43e476"
+            ]
+        ]
+    },
+    {
+        "id": "fb60e6ff2366e7fd",
+        "type": "json",
+        "z": "3021c112b8f44a27",
+        "g": "d655e1845c1c0605",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 250,
+        "y": 760,
+        "wires": [
+            [
+                "b523048bb88a13a2"
+            ]
+        ]
+    },
+    {
+        "id": "4dfefcdd5119b094",
+        "type": "function",
+        "z": "3021c112b8f44a27",
+        "g": "d655e1845c1c0605",
+        "name": "if query.method",
+        "func": "if (msg.req.query.method) {\n    return [null, msg]\n} else {\n    return [msg, null]\n}\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 700,
+        "wires": [
+            [
+                "1a8aeb57cba02716"
+            ],
+            [
+                "fb60e6ff2366e7fd"
+            ]
+        ]
+    },
+    {
+        "id": "1a8aeb57cba02716",
+        "type": "link out",
+        "z": "3021c112b8f44a27",
+        "g": "d655e1845c1c0605",
+        "name": "to-response",
+        "mode": "link",
+        "links": [
+            "d3cda662559e53d7"
+        ],
+        "x": 510,
+        "y": 680,
+        "wires": [],
+        "l": true
+    },
+    {
+        "id": "ea6e76c9ce43e476",
+        "type": "link out",
+        "z": "3021c112b8f44a27",
+        "g": "d655e1845c1c0605",
+        "name": "to-response",
+        "mode": "link",
+        "links": [
+            "d3cda662559e53d7"
+        ],
+        "x": 270,
+        "y": 840,
+        "wires": [],
+        "l": true
+    },
+    {
+        "id": "b3904af4edd0efc3",
+        "type": "link out",
+        "z": "3021c112b8f44a27",
+        "g": "d655e1845c1c0605",
+        "name": "to-response",
+        "mode": "link",
+        "links": [
+            "d3cda662559e53d7"
+        ],
+        "x": 290,
+        "y": 1000,
+        "wires": [],
+        "l": true
+    },
+    {
+        "id": "4ae2f24fedb8665c",
+        "type": "link out",
+        "z": "3021c112b8f44a27",
+        "g": "f3e1e5f0afc6dd83",
+        "name": "to-response",
+        "mode": "link",
+        "links": [
+            "d3cda662559e53d7"
+        ],
+        "x": 290,
+        "y": 200,
+        "wires": [],
+        "l": true
+    },
+    {
+        "id": "f3ddbefc87aa4919",
+        "type": "link out",
+        "z": "3021c112b8f44a27",
+        "g": "f3e1e5f0afc6dd83",
+        "name": "to-response",
+        "mode": "link",
+        "links": [
+            "d3cda662559e53d7"
+        ],
+        "x": 590,
+        "y": 200,
+        "wires": [],
+        "l": true
+    },
+    {
+        "id": "d3cda662559e53d7",
+        "type": "link in",
+        "z": "3021c112b8f44a27",
+        "name": "link-in-response",
+        "links": [
+            "1a8aeb57cba02716",
+            "4ae2f24fedb8665c",
+            "b3904af4edd0efc3",
+            "ea6e76c9ce43e476",
+            "f3ddbefc87aa4919",
+            "40374a02d4524d66",
+            "385cc03b4defca08",
+            "33451a27637a67c6",
+            "716c37ef41124d96",
+            "92e8441ec9afb089",
+            "e8741b97f3b16d68"
+        ],
+        "x": 1060,
+        "y": 220,
         "wires": [
             [
                 "1f6b16cea7ffc246"
+            ]
+        ],
+        "l": true
+    },
+    {
+        "id": "0db68cb0f55ce6cc",
+        "type": "http in",
+        "z": "3021c112b8f44a27",
+        "g": "d655e1845c1c0605",
+        "name": "[PUT] jrgen-editor/artifact.json",
+        "url": "/jrgen-editor/artifact.json",
+        "method": "put",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 820,
+        "y": 700,
+        "wires": [
+            [
+                "8aad875e96bfd35c"
+            ]
+        ]
+    },
+    {
+        "id": "d469196f97d59f9e",
+        "type": "debug",
+        "z": "3021c112b8f44a27",
+        "g": "5e37ef9d739b77e1",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 1180,
+        "wires": []
+    },
+    {
+        "id": "7a109816265008d6",
+        "type": "debug",
+        "z": "3021c112b8f44a27",
+        "g": "f3e1e5f0afc6dd83",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 460,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "40374a02d4524d66",
+        "type": "link out",
+        "z": "3021c112b8f44a27",
+        "g": "d655e1845c1c0605",
+        "name": "to-response",
+        "mode": "link",
+        "links": [
+            "d3cda662559e53d7"
+        ],
+        "x": 870,
+        "y": 780,
+        "wires": [],
+        "l": true
+    },
+    {
+        "id": "8aad875e96bfd35c",
+        "type": "file",
+        "z": "3021c112b8f44a27",
+        "g": "d655e1845c1c0605",
+        "name": "[WRITE] artifact.json",
+        "filename": "/data/jrgen-editor/artifact.json",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 840,
+        "y": 740,
+        "wires": [
+            [
+                "40374a02d4524d66"
+            ]
+        ]
+    },
+    {
+        "id": "6afd6930fcad9c84",
+        "type": "http in",
+        "z": "3021c112b8f44a27",
+        "name": "[PUT] jrgen-editor/ui.html",
+        "url": "/jrgen-editor/ui.html",
+        "method": "put",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 1290,
+        "y": 700,
+        "wires": [
+            [
+                "c594ec1e6581c7d0"
+            ]
+        ]
+    },
+    {
+        "id": "55f66c54bbceeba8",
+        "type": "debug",
+        "z": "3021c112b8f44a27",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1500,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "385cc03b4defca08",
+        "type": "link out",
+        "z": "3021c112b8f44a27",
+        "name": "to-response",
+        "mode": "link",
+        "links": [
+            "d3cda662559e53d7"
+        ],
+        "x": 1370,
+        "y": 960,
+        "wires": [],
+        "l": true
+    },
+    {
+        "id": "dd10620bc2bbc63b",
+        "type": "file",
+        "z": "3021c112b8f44a27",
+        "name": "[WRITE] ui.html",
+        "filename": "/data/jrgen-editor/ui.html",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 1360,
+        "y": 920,
+        "wires": [
+            [
+                "385cc03b4defca08"
+            ]
+        ]
+    },
+    {
+        "id": "c594ec1e6581c7d0",
+        "type": "html",
+        "z": "3021c112b8f44a27",
+        "name": "",
+        "property": "payload",
+        "outproperty": "payload",
+        "tag": "#export",
+        "ret": "html",
+        "as": "single",
+        "x": 1240,
+        "y": 740,
+        "wires": [
+            [
+                "56154a506e2477fd"
+            ]
+        ]
+    },
+    {
+        "id": "56154a506e2477fd",
+        "type": "split",
+        "z": "3021c112b8f44a27",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "x": 1370,
+        "y": 740,
+        "wires": [
+            [
+                "8ea6fc29a7e5daf3"
+            ]
+        ]
+    },
+    {
+        "id": "8ea6fc29a7e5daf3",
+        "type": "function",
+        "z": "3021c112b8f44a27",
+        "name": "function 1",
+        "func": "msg.payload = `< !DOCTYPE html >\n    <html>\n\n        <head>\n            <meta charset=\"utf-8\" />\n            <meta http-equiv=\"x-ua-compatible\" content=\"ie=edge\" />\n            <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n            <title>JSON RPC API</title>\n\n            <script src=\"https://unpkg.com/vue@3/dist/vue.global.js\"></script>\n            <script src=\"/index.js\"></script>\n            <link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css\"\n                integrity=\"sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2\" crossorigin=\"anonymous\" />\n            <script src=\"https://code.jquery.com/jquery-3.5.1.slim.min.js\"\n                integrity=\"sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj\" crossorigin=\"anonymous\">\n            </script>\n            <script src=\"https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js\"\n                integrity=\"sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx\" crossorigin=\"anonymous\">\n            </script>\n            <script src=\"https://cdn.jsdelivr.net/npm/monaco-editor@0.27.0/min/vs/loader.js\"></script>\n\n            <style>\n                button {\n                    margin: 4px;\n    }\n\n                h4 {\n                    display: inline;\n    }\n\n                p {\n                    word - wrap: break-word;\n    }\n\n                .sidenav,\n                .content {\n                    overflow - y: auto;\n                height: calc(100vh - 57px);\n                max-height: calc(100vh - 57px);\n    }\n\n                .sidenav {\n                    padding: 0;\n                display: flex;\n                flex-wrap: nowrap;\n                flex-direction: column;\n                justify-content: start;\n                align-items: stretch;\n                align-content: start\n    }\n\n                .card {\n                    margin - bottom: 15px;\n    }\n\n                .card-header {\n                    cursor: pointer;\n    }\n\n                .content,\n                .card-block,\n                .search-form {\n                    padding: 15px;\n    }\n\n                .dropdown-menu {\n                    position: absolute;\n                top: 100%;\n                left: 0;\n                z-index: 999;\n    }\n\n                .nav-link {\n                    color: #343a40 !important;\n    }\n\n                .nav-pills .nav-link.active,\n    .nav-pills .show>.nav-link {\n                    color: #f8f9fa !important;\n                background-color: #343a40 !important;\n    }\n\n                .card.disabled,\n                .nav-link.disabled {\n                    opacity: 0.5;\n    }\n            </style>\n        </head>\n\n        <body class=\"bg-light\">\n            ${msg.payload}\n        </body>\n    </html>\n\n\n`\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1380,
+        "y": 820,
+        "wires": [
+            [
+                "dd10620bc2bbc63b"
+            ]
+        ]
+    },
+    {
+        "id": "9d984054d0764556",
+        "type": "template",
+        "z": "3021c112b8f44a27",
+        "name": "",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "html",
+        "syntax": "plain",
+        "template": "<!DOCTYPE html>\n<html>\n\n<head>\n  <meta charset=\"utf-8\" />\n  <meta http-equiv=\"x-ua-compatible\" content=\"ie=edge\" />\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n  <title>JSON RPC API</title>\n\n  <script src=\"https://unpkg.com/vue@3/dist/vue.global.js\"></script>\n  <script src=\"/index.js\"></script>\n  <link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css\"\n    integrity=\"sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2\" crossorigin=\"anonymous\" />\n  <script src=\"https://code.jquery.com/jquery-3.5.1.slim.min.js\"\n    integrity=\"sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj\" crossorigin=\"anonymous\">\n  </script>\n  <script src=\"https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js\"\n    integrity=\"sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx\" crossorigin=\"anonymous\">\n  </script>\n  <script src=\"https://cdn.jsdelivr.net/npm/monaco-editor@0.27.0/min/vs/loader.js\"></script>\n\n  <style>\n    button {\n      margin: 4px;\n    }\n\n    h4 {\n      display: inline;\n    }\n\n    p {\n      word-wrap: break-word;\n    }\n\n    .sidenav,\n    .content {\n      overflow-y: auto;\n      height: calc(100vh - 57px);\n      max-height: calc(100vh - 57px);\n    }\n\n    .sidenav {\n      padding: 0;\n      display: flex;\n      flex-wrap: nowrap;\n      flex-direction: column;\n      justify-content: start;\n      align-items: stretch;\n      align-content: start\n    }\n\n    .card {\n      margin-bottom: 15px;\n    }\n\n    .card-header {\n      cursor: pointer;\n    }\n\n    .content,\n    .card-block,\n    .search-form {\n      padding: 15px;\n    }\n\n    .dropdown-menu {\n      position: absolute;\n      top: 100%;\n      left: 0;\n      z-index: 999;\n    }\n\n    .nav-link {\n      color: #343a40 !important;\n    }\n\n    .nav-pills .nav-link.active,\n    .nav-pills .show>.nav-link {\n      color: #f8f9fa !important;\n      background-color: #343a40 !important;\n    }\n\n    .card.disabled,\n    .nav-link.disabled {\n      opacity: 0.5;\n    }\n  </style>\n</head>\n\n<body class=\"bg-light\">\n{{payload}}    \n</body>\n</html>\n\n\n\n\n",
+        "output": "str",
+        "x": 1140,
+        "y": 860,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8701e3d7dac1b557",
+        "type": "http in",
+        "z": "3021c112b8f44a27",
+        "name": "",
+        "url": "/rpc/api/requestExamples",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 1290,
+        "y": 80,
+        "wires": [
+            [
+                "d76b05561adc8cda",
+                "33451a27637a67c6"
+            ]
+        ]
+    },
+    {
+        "id": "d76b05561adc8cda",
+        "type": "debug",
+        "z": "3021c112b8f44a27",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1560,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "33451a27637a67c6",
+        "type": "link out",
+        "z": "3021c112b8f44a27",
+        "name": "to-response",
+        "mode": "link",
+        "links": [
+            "d3cda662559e53d7"
+        ],
+        "x": 1350,
+        "y": 120,
+        "wires": [],
+        "l": true
+    },
+    {
+        "id": "330e491f0f811cf8",
+        "type": "http in",
+        "z": "3021c112b8f44a27",
+        "g": "f3e1e5f0afc6dd83",
+        "name": "[GET] /json-refs.js",
+        "url": "/json-refs.js",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 270,
+        "y": 260,
+        "wires": [
+            [
+                "029409776332c8f2"
+            ]
+        ]
+    },
+    {
+        "id": "029409776332c8f2",
+        "type": "file in",
+        "z": "3021c112b8f44a27",
+        "g": "f3e1e5f0afc6dd83",
+        "name": "",
+        "filename": "/data/jrgen-editor/json-refs.js",
+        "filenameType": "str",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 220,
+        "y": 300,
+        "wires": [
+            [
+                "716c37ef41124d96"
+            ]
+        ]
+    },
+    {
+        "id": "716c37ef41124d96",
+        "type": "link out",
+        "z": "3021c112b8f44a27",
+        "g": "f3e1e5f0afc6dd83",
+        "name": "to-response",
+        "mode": "link",
+        "links": [
+            "d3cda662559e53d7"
+        ],
+        "x": 290,
+        "y": 340,
+        "wires": [],
+        "l": true
+    },
+    {
+        "id": "6b93a23ee5c5bdbe",
+        "type": "http in",
+        "z": "3021c112b8f44a27",
+        "g": "5e37ef9d739b77e1",
+        "name": "[PUT] jrgen-editor/state/language",
+        "url": "/jrgen-editor/state/language",
+        "method": "put",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 230,
+        "y": 1220,
+        "wires": [
+            [
+                "ae31c68b9033ac5d",
+                "d469196f97d59f9e"
+            ]
+        ]
+    },
+    {
+        "id": "ae31c68b9033ac5d",
+        "type": "change",
+        "z": "3021c112b8f44a27",
+        "g": "5e37ef9d739b77e1",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "state.language",
+                "pt": "flow",
+                "to": "payload.language",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 250,
+        "y": 1260,
+        "wires": [
+            [
+                "92e8441ec9afb089"
+            ]
+        ]
+    },
+    {
+        "id": "92e8441ec9afb089",
+        "type": "link out",
+        "z": "3021c112b8f44a27",
+        "g": "5e37ef9d739b77e1",
+        "name": "to-response",
+        "mode": "link",
+        "links": [
+            "d3cda662559e53d7"
+        ],
+        "x": 290,
+        "y": 1300,
+        "wires": [],
+        "l": true
+    },
+    {
+        "id": "1148edfba1a538be",
+        "type": "http in",
+        "z": "3021c112b8f44a27",
+        "g": "5e37ef9d739b77e1",
+        "name": "[GET] jrgen-editor/state",
+        "url": "/jrgen-editor/state",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 260,
+        "y": 1360,
+        "wires": [
+            [
+                "b5f0590235244293"
+            ]
+        ]
+    },
+    {
+        "id": "b5f0590235244293",
+        "type": "change",
+        "z": "3021c112b8f44a27",
+        "g": "5e37ef9d739b77e1",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "state",
+                "tot": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 280,
+        "y": 1400,
+        "wires": [
+            [
+                "e8741b97f3b16d68"
+            ]
+        ]
+    },
+    {
+        "id": "e8741b97f3b16d68",
+        "type": "link out",
+        "z": "3021c112b8f44a27",
+        "g": "5e37ef9d739b77e1",
+        "name": "to-response",
+        "mode": "link",
+        "links": [
+            "d3cda662559e53d7"
+        ],
+        "x": 290,
+        "y": 1440,
+        "wires": [],
+        "l": true
+    },
+    {
+        "id": "fa12b4c4386720d3",
+        "type": "comment",
+        "z": "3021c112b8f44a27",
+        "g": "5e37ef9d739b77e1",
+        "name": "Manage editor state",
+        "info": "",
+        "x": 190,
+        "y": 1180,
+        "wires": []
+    },
+    {
+        "id": "1fc87b6260981378",
+        "type": "comment",
+        "z": "3021c112b8f44a27",
+        "g": "f3e1e5f0afc6dd83",
+        "name": "get html and scripts",
+        "info": "",
+        "x": 190,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "495d88c2e35a38ab",
+        "type": "comment",
+        "z": "3021c112b8f44a27",
+        "g": "d655e1845c1c0605",
+        "name": "get/put schema and artifacts",
+        "info": "",
+        "x": 220,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "6c692ac6214f308a",
+        "type": "debug",
+        "z": "3021c112b8f44a27",
+        "g": "d655e1845c1c0605",
+        "name": "debug 6",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 520,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "4c0e041327fc1acd",
+        "type": "tcp request",
+        "z": "3021c112b8f44a27",
+        "name": "",
+        "server": "",
+        "port": "",
+        "out": "time",
+        "ret": "buffer",
+        "splitc": "0",
+        "newline": "",
+        "trim": false,
+        "tls": "",
+        "x": 1870,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "81995c3b5d171079",
+        "type": "udp out",
+        "z": "3021c112b8f44a27",
+        "name": "",
+        "addr": "",
+        "iface": "",
+        "port": "",
+        "ipv": "udp4",
+        "outport": "",
+        "base64": false,
+        "multicast": "false",
+        "x": 2070,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "ab8029cb4f31318f",
+        "type": "http in",
+        "z": "3021c112b8f44a27",
+        "name": "",
+        "url": "/jrgen-editor/rpc-request",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 1190,
+        "y": 300,
+        "wires": [
+            [
+                "774f5511adcd0b15"
+            ]
+        ]
+    },
+    {
+        "id": "5f5340bbc5f8a306",
+        "type": "switch",
+        "z": "3021c112b8f44a27",
+        "name": "",
+        "property": "payload.protocol",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "TCP",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "UDP",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "MQTT",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 1610,
+        "y": 300,
+        "wires": [
+            [
+                "4c0e041327fc1acd"
+            ],
+            [
+                "32259b222e8bc0d7",
+                "0e90b8c7be079b2a"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "774f5511adcd0b15",
+        "type": "change",
+        "z": "3021c112b8f44a27",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "host",
+                "pt": "msg",
+                "to": "payload.host",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "port",
+                "pt": "msg",
+                "to": "payload.port",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1440,
+        "y": 300,
+        "wires": [
+            [
+                "5f5340bbc5f8a306"
+            ]
+        ]
+    },
+    {
+        "id": "0e90b8c7be079b2a",
+        "type": "debug",
+        "z": "3021c112b8f44a27",
+        "name": "debug 7",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1740,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "32259b222e8bc0d7",
+        "type": "change",
+        "z": "3021c112b8f44a27",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "ip",
+                "pt": "msg",
+                "to": "host",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1770,
+        "y": 300,
+        "wires": [
+            [
+                "a8551923b3276ef6"
+            ]
+        ]
+    },
+    {
+        "id": "a8551923b3276ef6",
+        "type": "json",
+        "z": "3021c112b8f44a27",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 1930,
+        "y": 300,
+        "wires": [
+            [
+                "81995c3b5d171079"
             ]
         ]
     }

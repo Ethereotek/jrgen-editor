@@ -27,25 +27,22 @@
     "build-webpack": "webpack --mode production"
   },
   "dependencies": {
-    "commander": "^9.1.0",
-    "fs-extra": "^10.0.1",
-    "glob": "^7.2.0",
-    "http": "^0.0.1-security",
+    "@apidevtools/json-schema-ref-parser": "^10.1.0",
+    "buffer": "^6.0.3",
     "https-browserify": "^1.0.0",
+    "json-refs": "^3.0.15",
     "json-schema-ref-parser": "^9.0.9",
-    "json-schema-to-typescript": "^9.0.0",
     "monaco-editor": "^0.38.0",
     "mustache": "^4.2.0",
-    "polka": "^0.5.2",
     "prettier": "^2.6.2",
-    "serve-static": "^1.15.0",
+    "process": "^0.11.10",
+    "stream-http": "^3.2.0",
     "url": "^0.11.0",
     "util": "^0.12.5",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "yaml": "^2.2.2"
   },
   "devDependencies": {
-    "path-browserify": "^1.0.1",
-    "semantic-release": "^19.0.2",
     "webpack": "^5.82.1",
     "webpack-cli": "^5.1.1"
   }

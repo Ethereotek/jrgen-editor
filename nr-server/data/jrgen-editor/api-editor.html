@@ -5,8 +5,12 @@
   <meta charset="utf-8" />
   <meta http-equiv="x-ua-compatible" content="ie=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>JSON RPC API</title>
+  <title>jrgen-editor</title>
 
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <script src="/index.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
@@ -18,7 +22,7 @@
     integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
     crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.27.0/min/vs/loader.js"></script>
-
+  <script src="json-refs.js"></script>
   <style>
     button {
       margin: 4px;
@@ -80,17 +84,91 @@
       background-color: #343a40 !important;
     }
 
+    .save-success{
+      color:rgb(66, 245, 69);
+    }
+    .save-failure{
+      color:rgb(245, 0, 0);
+    }
+
     .card.disabled,
     .nav-link.disabled {
       opacity: 0.5;
+    }
+
+    .code-font {
+      font-family: "Source Code Pro";
+    }
+
+    .custom-request {
+      width: 100%;
+      /* height:100%; */
+    }
+
+    #save-success-modal {
+      display: none;
+      width: 100px;
+      background-color: rgb(66, 245, 69);
+      /* position: absolute; */
+    }
+
+    .modal {
+      /* border: solid 0px;
+      border-radius: 4px; */
+      z-index: 1;
+      left: 0;
+      bottom: 0;
+
+    }
+
+    .modal-content {
+      background: none;
+    }
+
+    .navbar{
+      justify-content: flex-start !important;
+    }
+
+    #splash-screen{
+      position:fixed;
+      top: 0;
+      left:0;
+      bottom: 0;
+      right: 0;
+      justify-content: center;
+      z-index: 9999;
+      display:flex;
+      width:100%;
+      height:100%;
+      background-color: white;
+
     }
   </style>
 </head>
 
 <body class="bg-light" id="app">
-  <nav class="navbar navbar-dark bg-dark justify-content-between sticky-top border-bottom">
+  <!-- <div id="splash-screen">
+    <p>Loading...</p>
+  </div> -->
+  <nav class="navbar navbar-dark bg-dark sticky-top border-bottom">
     <div>
       <a class="navbar-brand">{{schema.info.title}} {{schema.info.version}}</a>
+    </div>
+    <div style="display:flex">
+      <div class="dropdown">
+        <button class="btn  btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">File</button>
+        <div class="dropdown-menu">
+          <p class="dropdown-item" @click="downloadSchema('json', 'application/json')">Download JSON</p>
+          <p class="dropdown-item" @click="downloadSchema('yaml', 'application/x-yaml')">Download YAML</p>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="btn  btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">Edit</button>
+        <div class="dropdown-menu">
+          <p class="dropdown-item" onclick="convertToJson()">Convert to JSON</p>
+          <p class="dropdown-item" onclick="convertToYaml()">Convert to YAML</p>
+        </div>
+      </div>
     </div>
     <div style="display:flex">
       <div id="toc" class="dropdown">
@@ -102,7 +180,14 @@
           </p>
         </div>
       </div>
-      <button class="btn btn-secondary" type="button" onclick="saveToServer()">Save to Server</button>
+      <button class="btn btn-secondary" type="button" onclick="saveToServer()">
+        <i class="fa-solid fa-floppy-disk" id="save-to-server-icon"></i>
+        Save to Server
+      </button>
+      <button class="btn btn-secondary" type="button" id="save-success-modal">
+        <i class="fa-solid fa-floppy-disk"></i>
+        Success
+      </button>
     </div>
 
   </nav>
@@ -114,11 +199,29 @@
 
       </div>
 
-      <div class="content col-6" data-spy="scroll" data-target="#toc">
-        <div class="card border">
-          <div class="card-block">{{schema.info.description[0]}}</div>
+      <div class="content col-6" data-spy="scroll" data-target="#toc" id="export">
+        <div class="card border" v-for="description in schema.info.description">
+          <div class="card-block">{{description}}</div>
+
+
         </div>
-        <div class="card method" :id="method.id" v-for="method in data">
+        <div class="card border">
+          <div class="card-block">
+            <h5>Server</h5>
+            <div>
+              <select id="server-protocol">
+                <option>UDP</option>
+                <option>TCP</option>
+                <option>MQTT</option>
+              </select>
+              <select id="server-address">
+                <option v-for="server in schema.servers" style="width:90%">{{server}}</option>
+              </select>
+
+            </div>
+          </div>
+        </div>
+        <div class="card method" :id="method.id" v-for="method in data" @click="collapseMethod(method.id)">
           <div class="card-header text-light bg-dark" data-toggle="collapse">
             <h4>
               <span>{{method.name}}</span>
@@ -164,11 +267,11 @@
                         <th>Constraints</th>
                         <th>Description</th>
                       </tr>
-                      <tr>
-                        <td>{{method.result[0].name}}</td>
-                        <td>{{method.type}}</td>
-                        <td>{{method.constraints}}</td>
-                        <td>{{method.description}}</td>
+                      <tr v-for="res in method.result">
+                        <td>{{res.name}}</td>
+                        <td>{{res.type}}</td>
+                        <td>{{res.constraints}}</td>
+                        <td>{{res.description}}</td>
                       </tr>
 
                     </table>
@@ -190,22 +293,21 @@
                     </table>
                   </div>
                   <div>
-                    <h5>Request example</h5>
-                    <pre class="bg-light">{{method.requestExample}}</pre>
+                    <!-- <div class="border"> -->
+                    <div class="card">
+                      <h5>Request example</h5>
+                      <button @click="sendRPC(method.requestExample)">Send</button>
+                      <pre class="bg-light">{{method.requestExample}}</pre>
+                    </div>
 
-                    <h5>Response example</h5>
-                    <pre class="bg-light">{{method.responseExample}}</pre>
+                    <!-- </div> -->
+                    <div class="card">
+                      <h5>Response example</h5>
+                      <pre class="bg-light" :id="method.name + '_response'">{{method.responseExample}}</pre>
+                    </div>
                   </div>
 
                 </div>
-
-                <!-- <div class="col-4">
-                  <h5>Request example</h5>
-                  <pre class="bg-light">{{method.requestExample}}</pre>
-
-                  <h5>Response example</h5>
-                  <pre class="bg-light">{{method.responseExample}}</pre>
-                </div> -->
               </div>
             </div>
           </div>
@@ -217,11 +319,49 @@
   </div>
   </div>
 
+
   <script>
-    const httpRequest = new XMLHttpRequest()
-    let timer = null;
-    window.onload = () =>{
-      editor.getAction('editor.action.formatDocument').run();
+    const httpRequest = new XMLHttpRequest();
+    const port = window.location.port;        // for making requests to the node-red docker container
+    const hostname = window.location.hostname;
+    let timer = null;                         // for monaco editor update timeout
+    /* a few litte helper abstractions*/
+    function EditorLanguage() {
+      return editor.getModel()._languageIdentifier['language'];
+    }
+    function yamlToJson(_yaml) {
+      //takes yaml string and converts to json object
+      return jrgen.yaml.parse(_yaml);
+    }
+    function jsonToYaml(_json) {
+      //takes json object and converts to yaml string
+      if (typeof (_json) == 'string') {
+        _json = JSON.parse(_json);
+      }
+      return jrgen.yaml.stringify(_json);
+    };
+    window.onload = () => {
+      console.log('loaded')
+      let promise = fetch(`http://${hostname}:${port}/jrgen-editor/state`)
+        .then(response => response.text())
+        .then(data => {
+
+          let language = JSON.parse(data).language;
+          console.log(language)
+          if (language == 'yaml') {
+            convertToYaml();
+          } else {
+            convertToJson();
+          }
+        }).then(()=>{
+          editor.getAction('editor.action.formatDocument').run();
+          // let splashScreen = document.getElementById('splash-screen');
+          // splashScreen.style.display = 'none';
+        })
+      
+      
+      
+      
     }
     let schema = {
       "$schema": "https://rawgit.com/mzernetsch/jrgen/master/jrgen-spec.schema.json",
@@ -511,7 +651,7 @@
         }
       }
     }
-    
+
     /*---------------------------------------- MONACO EDITOR ----------------------------------------*/
 
     require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.27.0/min/vs' } });
@@ -536,44 +676,192 @@
         wordWrap: 'on'
       });
 
-
-
+      // define function to run for when the contents in editor are changed
       const model = editor.getModel();
       model.onDidChangeContent(function (event) {
+        console.log("now")
         if (timer) {
+          // when something changes, reset the timer
           clearTimeout(timer);
         }
         timer = setTimeout(() => {
-          console.log('Content changed and 2 second have passed')
-          getEditorVal()
-        }, 500);
+          regenerateArtifacts()
+        }, 1000);
       })
 
-      fetch('http://localhost:9000/jrgen-editor/schema.json')
-      .then(response => response.text())
-      .then(data=>{editor.setValue(data); editor.getAction('editor.action.formatDocument').run();})
+      // get the schema from server and set it as the value of the editor
+      fetch(`http://${hostname}:${port}/jrgen-editor/schema.json`)
+        .then(response => response.text())
+        .then(data => {
+          editor.setValue(data);
+        })
     });
 
-    function getEditorVal() {
+
+    // does more than just getting the value of editor
+    // also parses the schema into an artifact and assigns it to the Vue object
+    async function regenerateArtifacts() {
       schema = editor.getValue()
+
+      // if it's in yaml, convert to json
+      let language = EditorLanguage() //editor.getModel()._languageIdentifier['language']
+      if (language == 'yaml') {
+        schema = JSON.stringify(jrgen.yaml.parse(schema));
+      }
+
       schema = JSON.parse(schema)
-      app.data = build_data(schema)
+      
+      // create the jrgen artifact from the schema, this is used to populate the page
+      let artifacts = await jrgen.generateArtifacts(schema)
+
+      // method objects are in an array, these next few lines create a look up
+      // so we can get the index of a method by name and easily get the method's object from the array
+      let methods = {};
+      let index = 0
+      artifacts.forEach((method) => {
+        methods[method.name] = index;
+        index += 1;
+      })
+      artifacts['methods'] = methods
+
+      // asing the artifacts to Vue's data object
+      app.data = artifacts;
       app.schema = schema;
-      console.log(editor.getValue())
+
+    }
+
+    /*-------------------------- LANGUAGE CONVERSION --------------------------*/
+    function convertToJson() {
+      let language = editor.getModel()._languageIdentifier['language'];
+      if (language == 'json') {
+        return
+      } else {
+        let jsonSchema = JSON.stringify(yamlToJson(editor.getValue()))
+        editor.setValue(jsonSchema);
+        monaco.editor.setModelLanguage(editor.getModel(), 'json');
+        editor.getAction('editor.action.formatDocument').run();
+        let options = {
+          method: 'PUT',
+          body: JSON.stringify({ 'language': 'json' }),
+          headers: { 'Content-Type': 'application/json' }
+        }
+        fetch(`http://${hostname}:${port}/jrgen-editor/state/language`, options)
+          .then(response => response.text())
+      }
+    }
+    function convertToYaml() {
+      let language = editor.getModel()._languageIdentifier['language'];
+      if (language == 'yaml') {
+        return
+      } else {
+        let yamlSchema = jsonToYaml(editor.getValue())
+        editor.setValue(yamlSchema);
+        monaco.editor.setModelLanguage(editor.getModel(), 'yaml');
+        // set state.language
+        let options = {
+          method: 'PUT',
+          body: JSON.stringify({ 'language': 'yaml' }),
+          headers: { 'Content-Type': 'application/json' }
+        }
+        fetch(`http://${hostname}:${port}/jrgen-editor/state/language`, options)
+          .then(response => response.text())
+      }
+    }
+    // saves both the schema and the artifact to the server
+    // saved in the docker directory /data/jrgen-editor/<file-name>.json
+    function saveSchema(schema) {
+      let options = {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: schema
+      }
+      fetch(`http://${hostname}:${port}/jrgen-editor/schema.json`, options)
+        .then(response => response)
+        .then(data => {
+          console.log(data)
+          if (data.status == 200){
+          
+          let saveIcon = document.getElementById('save-to-server-icon');
+          saveIcon.classList.add('save-success');
+          let modalTimer = setTimeout(() => {
+            saveIcon.classList.remove('save-success');
+          }, 3000)
+        }else{
+          console.log('error', err);
+          let saveIcon = document.getElementById('save-to-server-icon');
+          saveIcon.classList.add('save-failure');
+          let modalTimer = setTimeout(() => {
+            saveIcon.classList.remove('save-failure');
+          }, 3000)
+        }
+        }).catch(err=>{
+          console.log('error', err);
+          let saveIcon = document.getElementById('save-to-server-icon');
+          saveIcon.classList.add('save-failure');
+          let modalTimer = setTimeout(() => {
+            saveIcon.classList.remove('save-failure');
+          }, 3000)
+        })
     }
     function saveToServer() {
       schema = editor.getValue();
-      httpRequest.open('PUT', 'http://localhost:9000/jrgen-editor/schema.json');
+      if (EditorLanguage() == 'yaml') {
+        schema = JSON.stringify(yamlToJson(schema));
+
+      }
+
+      saveSchema(schema)
+
+      let artifact = app.data;
+      httpRequest.open('PUT', `http://${hostname}:${port}/jrgen-editor/artifact.json`);
       httpRequest.setRequestHeader('Content-Type', 'application/json');
       httpRequest.onload = function () {
         let data = httpRequest.response;
-        console.log("success or...??")
       }
-      httpRequest.send(schema)
+      httpRequest.send(JSON.stringify(artifact))
 
     }
+    // needs more work, especially in back-end, to save just the documentation, no Vue, no Monaco
+    function saveWebPage() {
+      let html = document.getElementById('app').outerHTML
 
-    const api_doc = {
+      httpRequest.open('PUT', `http://${hostname}:${port}/jrgen-editor/ui.html`);
+      httpRequest.setRequestHeader('Content-Type', 'text/html');
+      httpRequest.onload = function () {
+        let data = httpRequest.response;
+      }
+      httpRequest.send(html)
+    }
+    function sendRPC(requestExample) {
+          // lots of work needed on this functionality
+          // basically will send an RPC to a defined server
+          let serverProtocol = document.getElementById('server-protocol').value;
+          let serverAddress = document.getElementById('server-address').value.split(':');
+          
+          fetch(`http://${hostname}:${port}/jrgen-editor/rpc-request`, {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: {
+              protocol:serverProtocol,
+              host:serverAddress[0],
+              port:serverAddress[1],
+              message:requestExample
+            }
+          })
+            .then(response => response.text())
+            .then(data => {
+
+              let methodName = JSON.parse(requestExample).method;
+              let index = app.data.methods[methodName];
+              console.log(index)
+              app.data[index].responseExample = data
+
+            })
+        }
+
+    var api_doc = {
       data() {
         return {
           data: {},
@@ -581,11 +869,68 @@
         }
       },
       methods: {
+        downloadSchema(language, mimeType) {
+          let schema = editor.getValue();
+          if (EditorLanguage() == language) {
+            //
+          } else {
+            if (language == 'yaml') {
+              schema = jsonToYaml(schema);
+            } else {
+              schema = yamlToJson(schema);
+            }
+          }
+          let blob = new Blob([schema], { type: mimeType });
+          let url = URL.createObjectURL(blob);
+          let link = document.createElement('a');
+          link.href = url;
+          link.download = `api-spec.${language}`;
+          link.click();
+          URL.revokeObjectURL(url);
+          link.remove()
+        },
         goToMethod(methodId) {
-          console.log(methodId)
+          // used by drop menu to go to a specific method's div
           const element = document.getElementById(methodId);
           element.scrollIntoView({ behavior: "smooth" });
+        },
+
+        sendRPC(requestExample) {
+          // lots of work needed on this functionality
+          // basically will send an RPC to a defined server
+          let serverProtocol = document.getElementById('server-protocol').value;
+          let serverAddress = document.getElementById('server-address').value.split(':');
+          let body = {
+              protocol:serverProtocol,
+              host:serverAddress[0],
+              port:serverAddress[1],
+              message:requestExample
+            }
+          body = JSON.stringify(body)
+          fetch(`http://${hostname}:${port}/jrgen-editor/rpc-request`, {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body
+          })
+            .then(response => response.text())
+            .then(data => {
+
+              let methodName = JSON.parse(requestExample).method;
+              let index = app.data.methods[methodName];
+              console.log(index)
+              app.data[index].responseExample = data
+
+            })
+        },
+        collapseMethod(methodId){
+          let methodDiv = document.querySelector(`#${methodId} .collapse`);
+          if (methodDiv.classList.contains('show')){
+            methodDiv.classList.remove('show')
+          }else{
+            methodDiv.classList.add('show')
+          }
         }
+
       },
       computed: {
         dynamicTitle() {

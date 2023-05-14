@@ -1,16 +1,16 @@
 const path = require('path')
-
+const webpack = require('webpack')
 module.exports = {
-  entry: './src/index.js',
+  entry: './index.js',
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
+    path: path.resolve(__dirname, 'nr-server/data/jrgen-editor'),
+    filename: 'index.js',
+    library:'jrgen'
   },
   resolve: {
     fallback: {
-      "path": require.resolve("path-browserify"),
-	  "http":false,
-	  "https":false
+
     }
   }
-}
+  }
+
