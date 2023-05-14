@@ -1,4 +1,9 @@
-function normalizeMultiLineString(multiLineString, separator){
+const YAML = require('yaml')
+/*-----------------------------------------------------------------
+----------------------- JSON SCHEMA HANDLING ----------------------
+-----------------------------------------------------------------*/
+
+function normalizeMultiLineString(multiLineString, separator) {
   if (!multiLineString) {
     return "";
   }
@@ -8,8 +13,8 @@ function normalizeMultiLineString(multiLineString, separator){
   return multiLineString.toString();
 };
 
-function generateRequestExample(methodName, paramsSchema){
-  let example =  {
+function generateRequestExample(methodName, paramsSchema) {
+  let example = {
     jsonrpc: "2.0",
     id: "1234567890",
     method: methodName,
@@ -27,7 +32,7 @@ function generateRequestExample(methodName, paramsSchema){
   );
 };
 
-function generateResponseExample(resultSchema){
+function generateResponseExample(resultSchema) {
   return JSON.stringify(
     {
       jsonrpc: "2.0",
@@ -39,7 +44,7 @@ function generateResponseExample(resultSchema){
   );
 };
 
-function generateExample(schema){
+function generateExample(schema) {
   if (!schema) {
     return;
   }
@@ -82,16 +87,16 @@ function generateExample(schema){
     .filter((item) => !!item)
     .flat()) {
     const example = generateExample(item);
-    
+
     if (example) {
-      
+
       return example;
-      
+
     }
   }
 };
 
-function parsePropertyList(name, schema){
+function parsePropertyList(name, schema) {
   if (!schema) {
     return [];
   }
@@ -145,7 +150,7 @@ function parsePropertyList(name, schema){
       }, [])
       .join(", "),
     schema: JSON.stringify(schema, null, 2),
-    
+
   });
 
   if (schema.type === "array") {
@@ -201,44 +206,61 @@ function parsePropertyList(name, schema){
 
 async function resolveSchemaRefs(schema) {
   return JsonRefs.resolveRefs(schema)
-  .then(function (res){
-    return(res.resolved)
-  }, function(err){
-    console.log(err.stack)
-  })
+    .then(function (res) {
+      console.log(res)
+      return (res.resolved)
+    }, function (err) {
+      console.log(err.stack)
+    })
 };
 
 function generateBlueprint(schema) {
-	return Object.keys(schema.methods).map((key) => {
-	  const methodSchema = schema.methods[key];
-	  return {
-		id: key.replace(/\./g, "_"),
-		name: key,
-		summary: methodSchema.summary,
-		description: methodSchema.description,
-		constraints: methodSchema.constraints,
-		tags: methodSchema.tags,
-		params: parsePropertyList("params", methodSchema.params),
-		result: parsePropertyList("result", methodSchema.result),
-		errors: methodSchema.errors,
-		requestExample: generateRequestExample(key, methodSchema.params),
-		responseExample: generateResponseExample(methodSchema.result),
-	  };
-	});
+  return Object.keys(schema.methods).map((key) => {
+    const methodSchema = schema.methods[key];
+    return {
+      id: key.replace(/\./g, "_"),
+      name: key,
+      summary: methodSchema.summary,
+      description: methodSchema.description,
+      constraints: methodSchema.constraints,
+      tags: methodSchema.tags,
+      params: parsePropertyList("params", methodSchema.params),
+      result: parsePropertyList("result", methodSchema.result),
+      errors: methodSchema.errors,
+      requestExample: generateRequestExample(key, methodSchema.params),
+      responseExample: generateResponseExample(methodSchema.result),
+    };
+  });
+}
+
+async function generateArtifacts(schema) {
+  schema = await resolveSchemaRefs(schema) // resolve (or "expand") references
+  const blueprint = generateBlueprint(schema)
+  return blueprint
+
+}
+
+/*--------------------------------------------------
+------------------- YAML PARSING -------------------
+--------------------------------------------------*/
+
+function yamlToJson(_yaml) {
+  return YAML.parse(_yaml);
+}
+
+function jsonToYaml(_json) {
+  if (typeof (_json) == 'string') {
+    _json = JSON.parse(_json);
   }
-  
-
-
-async function generateArtifacts(schema){
-schema = await resolveSchemaRefs(schema) // resolve (or "expand") references
-const blueprint = generateBlueprint(schema)
-return blueprint
-
+  return YAML.stringify(_json);
 }
 
 module.exports = {
   generateArtifacts,
-  yaml:require('yaml')
+  yaml: YAML,
+  yamlToJson,
+  jsonToYaml
+
 }
 
 

@@ -27,11 +27,7 @@
     "build-webpack": "webpack --mode production"
   },
   "dependencies": {
-    "@apidevtools/json-schema-ref-parser": "^10.1.0",
-    "buffer": "^6.0.3",
-    "https-browserify": "^1.0.0",
     "json-refs": "^3.0.15",
-    "json-schema-ref-parser": "^9.0.9",
     "monaco-editor": "^0.38.0",
     "mustache": "^4.2.0",
     "prettier": "^2.6.2",

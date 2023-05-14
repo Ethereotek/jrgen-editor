@@ -74,6 +74,14 @@
       z-index: 999;
     }
 
+    .flex{
+      display:flex;
+    }
+    .server-select{
+      width:auto;
+      margin:4px;
+    }
+
     .nav-link {
       color: #343a40 !important;
     }
@@ -156,14 +164,14 @@
     </div>
     <div style="display:flex">
       <div class="dropdown">
-        <button class="btn  btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">File</button>
+        <button class="btn  btn-secondary btn-sm text-monospace dropdown-toggle" type="button" data-toggle="dropdown">File</button>
         <div class="dropdown-menu">
           <p class="dropdown-item" @click="downloadSchema('json', 'application/json')">Download JSON</p>
           <p class="dropdown-item" @click="downloadSchema('yaml', 'application/x-yaml')">Download YAML</p>
         </div>
       </div>
       <div class="dropdown">
-        <button class="btn  btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">Edit</button>
+        <button class="btn  btn-secondary btn-sm text-monospace dropdown-toggle" type="button" data-toggle="dropdown">Edit</button>
         <div class="dropdown-menu">
           <p class="dropdown-item" onclick="convertToJson()">Convert to JSON</p>
           <p class="dropdown-item" onclick="convertToYaml()">Convert to YAML</p>
@@ -172,7 +180,7 @@
     </div>
     <div style="display:flex">
       <div id="toc" class="dropdown">
-        <button class="btn  btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
+        <button class="btn  btn-secondary btn-sm text-monospace dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
           aria-expanded="false">Go to method...</button>
         <div class="dropdown-menu">
           <p v-for="method in data" :key="method.id">
@@ -180,7 +188,7 @@
           </p>
         </div>
       </div>
-      <button class="btn btn-secondary" type="button" onclick="saveToServer()">
+      <button class="btn btn-secondary btn-sm text-monospace" type="button" onclick="saveToServer()">
         <i class="fa-solid fa-floppy-disk" id="save-to-server-icon"></i>
         Save to Server
       </button>
@@ -195,11 +203,11 @@
   <div class="container-fluid">
 
     <div class="row">
-      <div class="editor col-6 bg-black border-right" id="editor">
+      <div class="editor col-6" style="overflow-y: hidden !important;" id="editor">
 
       </div>
 
-      <div class="content col-6" data-spy="scroll" data-target="#toc" id="export">
+      <div class="content col-6" id="export">
         <div class="card border" v-for="description in schema.info.description">
           <div class="card-block">{{description}}</div>
 
@@ -208,26 +216,29 @@
         <div class="card border">
           <div class="card-block">
             <h5>Server</h5>
-            <div>
-              <select id="server-protocol">
+            <div class="flex">
+              <select class="form-select form-control server-select" id="server-protocol">
                 <option>UDP</option>
                 <option>TCP</option>
                 <option>MQTT</option>
               </select>
-              <select id="server-address">
+              <select class="form-select form-control server-select" id="server-address">
                 <option v-for="server in schema.servers" style="width:90%">{{server}}</option>
               </select>
 
             </div>
           </div>
         </div>
-        <div class="card method" :id="method.id" v-for="method in data" @click="collapseMethod(method.id)">
-          <div class="card-header text-light bg-dark" data-toggle="collapse">
+        <div class="card method" :id="method.id" v-for="method in data" >
+          <div class="card-header text-light bg-dark" data-toggle="collapse" @click="collapseMethod(method.id)">
             <h4>
               <span>{{method.name}}</span>
 
               <div class="float-right">
                 <span class="badge badge-light"></span>
+                <div class="float-right">
+                  <span v-for="tag in method.tags" class="badge badge-light">{{tag}}</span>
+                </div>
               </div>
             </h4>
           </div>
@@ -296,7 +307,7 @@
                     <!-- <div class="border"> -->
                     <div class="card">
                       <h5>Request example</h5>
-                      <button @click="sendRPC(method.requestExample)">Send</button>
+                      <button type="button" class="btn btn-primary" style="width:100px" @click="sendRPC(method.requestExample)">Send</button>
                       <pre class="bg-light">{{method.requestExample}}</pre>
                     </div>
 
@@ -736,7 +747,7 @@
       if (language == 'json') {
         return
       } else {
-        let jsonSchema = JSON.stringify(yamlToJson(editor.getValue()))
+        let jsonSchema = JSON.stringify(jrgen.yamlToJson(editor.getValue()))
         editor.setValue(jsonSchema);
         monaco.editor.setModelLanguage(editor.getModel(), 'json');
         editor.getAction('editor.action.formatDocument').run();
@@ -754,7 +765,7 @@
       if (language == 'yaml') {
         return
       } else {
-        let yamlSchema = jsonToYaml(editor.getValue())
+        let yamlSchema = jrgen.jsonToYaml(editor.getValue())
         editor.setValue(yamlSchema);
         monaco.editor.setModelLanguage(editor.getModel(), 'yaml');
         // set state.language
@@ -808,7 +819,7 @@
     function saveToServer() {
       schema = editor.getValue();
       if (EditorLanguage() == 'yaml') {
-        schema = JSON.stringify(yamlToJson(schema));
+        schema = JSON.stringify(jrgen.yamlToJson(schema));
 
       }
 
@@ -875,9 +886,9 @@
             //
           } else {
             if (language == 'yaml') {
-              schema = jsonToYaml(schema);
+              schema = jrgen.jsonToYaml(schema);
             } else {
-              schema = yamlToJson(schema);
+              schema = JSON.stringify(jrgen.yamlToJson(schema));
             }
           }
           let blob = new Blob([schema], { type: mimeType });

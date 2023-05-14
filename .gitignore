@@ -33,6 +33,8 @@ jspm_packages
 # test directories
 sandbox
 
+_OLD
+
 # Optional npm cache directory
 .npm
 

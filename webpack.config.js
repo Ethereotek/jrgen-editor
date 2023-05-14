@@ -1,7 +1,7 @@
 const path = require('path')
-const webpack = require('webpack')
+// const webpack = require('webpack')
 module.exports = {
-  entry: './index.js',
+  entry: '/src/jrgen-editor/index.js',
   output: {
     path: path.resolve(__dirname, 'nr-server/data/jrgen-editor'),
     filename: 'index.js',

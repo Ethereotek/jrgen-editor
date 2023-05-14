@@ -1,0 +1,8 @@
+{
+    "json-refs": {
+        "spec": "json-refs",
+        "module": "json-refs",
+        "builtin": false,
+        "known": false
+    }
+}

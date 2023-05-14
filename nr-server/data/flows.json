@@ -89,11 +89,14 @@
             "495d88c2e35a38ab",
             "6c692ac6214f308a",
             "c5b79acd62af72d2",
-            "0bb3b0c361a8cd37"
+            "0bb3b0c361a8cd37",
+            "2248cac7c2b77c4a",
+            "82cbe22b0a7770f2",
+            "a7523c7f699d4cb5"
         ],
         "x": 134,
         "y": 439,
-        "w": 1032,
+        "w": 1252,
         "h": 522
     },
     {
@@ -309,10 +312,10 @@
         "action": "",
         "pretty": false,
         "x": 450,
-        "y": 700,
+        "y": 660,
         "wires": [
             [
-                "b523048bb88a13a2"
+                "a7523c7f699d4cb5"
             ]
         ]
     },
@@ -322,7 +325,7 @@
         "z": "3021c112b8f44a27",
         "g": "d655e1845c1c0605",
         "name": "if query.method",
-        "func": "if (msg.req.query.method) {\n    return [null, msg]\n} else {\n    return [msg, null]\n}\n",
+        "func": "\nif (msg.req.query.method) {\n    \n    return [null, msg]\n\n} else {\n    return [msg, null]\n}\n",
         "outputs": 2,
         "noerr": 0,
         "initialize": "",
@@ -349,8 +352,8 @@
         "links": [
             "d3cda662559e53d7"
         ],
-        "x": 610,
-        "y": 700,
+        "x": 690,
+        "y": 680,
         "wires": [],
         "l": true
     },
@@ -1189,5 +1192,53 @@
         "x": 320,
         "y": 1300,
         "wires": []
+    },
+    {
+        "id": "2248cac7c2b77c4a",
+        "type": "debug",
+        "z": "3021c112b8f44a27",
+        "g": "d655e1845c1c0605",
+        "name": "debug 8",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1280,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "82cbe22b0a7770f2",
+        "type": "json",
+        "z": "3021c112b8f44a27",
+        "g": "d655e1845c1c0605",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 1130,
+        "y": 780,
+        "wires": [
+            [
+                "2248cac7c2b77c4a"
+            ]
+        ]
+    },
+    {
+        "id": "a7523c7f699d4cb5",
+        "type": "json-refs-parser",
+        "z": "3021c112b8f44a27",
+        "g": "d655e1845c1c0605",
+        "name": "",
+        "x": 460,
+        "y": 700,
+        "wires": [
+            [
+                "b523048bb88a13a2"
+            ]
+        ]
     }
 ]
