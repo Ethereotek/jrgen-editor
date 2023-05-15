@@ -3,16 +3,6 @@ const YAML = require('yaml')
 ----------------------- JSON SCHEMA HANDLING ----------------------
 -----------------------------------------------------------------*/
 
-function normalizeMultiLineString(multiLineString, separator) {
-  if (!multiLineString) {
-    return "";
-  }
-  if (Array.isArray(multiLineString)) {
-    return multiLineString.join(separator || "\n");
-  }
-  return multiLineString.toString();
-};
-
 function generateRequestExample(methodName, paramsSchema) {
   let example = {
     jsonrpc: "2.0",

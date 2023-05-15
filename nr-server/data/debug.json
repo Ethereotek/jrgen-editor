@@ -1,0 +1,85 @@
+{
+	"id": "f6fbb503e521dc55",
+	"label": "{{title}} web client",
+	"disabled": false,
+	"info": "",
+	"env": [
+		{
+			"name": "host",
+			"value": "127.0.0.1",
+			"type": "str"
+		},
+		{
+			"name": "port",
+			"value": "7000",
+			"type": "str"
+		}
+	],
+	"nodes": [
+		{{#methods}}
+		{
+			"id": "{{id}}",
+			"type": "inject",
+			"z": "f6fb9603e521dc55",
+			"name": "{{functionName}}",
+			"props": [
+				{
+					"p": "payload"
+				},
+				{
+					"p": "topic",
+					"vt": "str"
+				}
+			],
+			"repeat": "",
+			"crontab": "",
+			"once": false,
+			"onceDelay": 0.1,
+			"topic": "",
+			"payload": "{\"jsonrpc\":\"2.0\",\"id\":0,\"{{functionName}}\":\"\",\"params\":{}}",
+			"payloadType": "json",
+			"x": 190,
+			"y": {{ty}},
+			"wires": [
+				[
+					"e55755881b564e4b"
+				]
+			]
+		},
+		{{/methods}}
+
+		{
+			"id": "e55755881b564e4b",
+			"type": "udp out",
+			"z": "f6fbb503e521dc55",
+			"name": "",
+			"addr": "${host}",
+			"iface": "",
+			"port": "${port}",
+			"ipv": "udp4",
+			"outport": "",
+			"base64": false,
+			"multicast": "false",
+			"x": 490,
+			"y": 80,
+			"wires": []
+		},
+		{
+			"id": "bf8718a444918063",
+			"type": "udp in",
+			"z": "ce8807a8ef050638",
+			"name": "",
+			"iface": "",
+			"port": "${port_in}",
+			"ipv": "udp4",
+			"multicast": "false",
+			"group": "",
+			"datatype": "buffer",
+			"x": 630,
+			"y": 80,
+			"wires": [
+				[]
+			]
+		}
+	]
+}

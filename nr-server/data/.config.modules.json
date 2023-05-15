@@ -4,5 +4,11 @@
         "module": "json-refs",
         "builtin": false,
         "known": false
+    },
+    "mustache": {
+        "spec": "mustache",
+        "module": "mustache",
+        "builtin": false,
+        "known": false
     }
 }

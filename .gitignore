@@ -31,9 +31,15 @@ node_modules
 jspm_packages
 
 # test directories
-sandbox
+sandbox/
+_OLD/
 
-_OLD
+# node-red
+nr-server/data/context
+flows_cred.json
+*.backup
+/src/_jrgen-editor
+
 
 # Optional npm cache directory
 .npm
@@ -43,3 +49,8 @@ _OLD
 
 # misc
 TODO.md
+dist/
+examples/
+
+# OS
+.DS_Store
