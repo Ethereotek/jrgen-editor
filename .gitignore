@@ -33,6 +33,7 @@ jspm_packages
 # test directories
 sandbox/
 _OLD/
+_tests/
 
 # node-red
 nr-server/data/context

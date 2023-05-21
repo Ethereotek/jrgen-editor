@@ -22,5 +22,18 @@
 </script>
 
 <script type="text/html" data-help-name="jrgen">
-    <p>Generates documents and scripts from JSON schema using the jrgen package.</p>
+    <p>Generates documents and scripts from JSON schema using the jrgen package.
+
+        The `msg` object must contain a `schema` property and `targetArtifact` property. The schema refers to the API spec, which should be a JSON schema. The `targetArtifact` is the type of document you want to generate, the options are:
+        <table>
+            <tr>
+                <td>docs-html</td>
+                <td>docs-md</td>
+                <td>client-web-js</td>
+                <td>client-web-ts</td>
+                <td>server-node-js</td>
+                <td>spec-postman</td>
+            </tr>
+        </table>
+    </p>
 </script>

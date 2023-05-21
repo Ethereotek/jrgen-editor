@@ -111,12 +111,12 @@
             "495d88c2e35a38ab",
             "c5b79acd62af72d2",
             "0bb3b0c361a8cd37",
-            "a7523c7f699d4cb5",
             "e9c5c9149ef25f28",
             "fce3bde55afe2dfe",
             "b2404c8ab272a2b3",
             "508a91c69611c103",
-            "a8af37f238b19835"
+            "a8af37f238b19835",
+            "dc1541d4d8ad85a8"
         ],
         "x": 134,
         "y": 439,
@@ -392,8 +392,8 @@
         "y": 660,
         "wires": [
             [
-                "a7523c7f699d4cb5",
-                "a8af37f238b19835"
+                "a8af37f238b19835",
+                "dc1541d4d8ad85a8"
             ]
         ]
     },
@@ -1195,20 +1195,6 @@
         "wires": []
     },
     {
-        "id": "a7523c7f699d4cb5",
-        "type": "json-refs-parser",
-        "z": "3021c112b8f44a27",
-        "g": "d655e1845c1c0605",
-        "name": "",
-        "x": 460,
-        "y": 700,
-        "wires": [
-            [
-                "b523048bb88a13a2"
-            ]
-        ]
-    },
-    {
         "id": "fce3bde55afe2dfe",
         "type": "link in",
         "z": "3021c112b8f44a27",
@@ -1625,6 +1611,31 @@
             [
                 "87aef51dbd39a0d7",
                 "4b4d9a4942576975"
+            ]
+        ]
+    },
+    {
+        "id": "dc1541d4d8ad85a8",
+        "type": "function",
+        "z": "3021c112b8f44a27",
+        "g": "d655e1845c1c0605",
+        "name": "json-refs-parser",
+        "func": "async function resolveJsonRefs(msg) {\n    const schema = msg.payload;\n    try {\n        const resolvedSchema = await jsonRefs.resolveRefs(schema);\n        msg.payload = resolvedSchema.resolved;\n        return msg;\n    } catch (error) {\n        throw new Error('Failed to resolve JSON references: ' + error.message);\n    }\n}\n\nreturn resolveJsonRefs(msg);",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "jsonRefs",
+                "module": "json-refs"
+            }
+        ],
+        "x": 460,
+        "y": 700,
+        "wires": [
+            [
+                "b523048bb88a13a2"
             ]
         ]
     },

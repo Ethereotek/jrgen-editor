@@ -24,15 +24,20 @@
     "build:examples": "npm run clear:examples && node ./scripts/create-examples.js",
     "clear:examples": "node ./scripts/clear-examples.js",
     "format": "prettier --write src/**/*.{js,ts,css,scss,json,md}",
-    "build-webpack": "webpack --mode production"
+    "build-webpack": "webpack --mode production",
+    "test-json-refs": "moca"
   },
   "dependencies": {
+    "glob": "^7.2.0",
     "json-refs": "^3.0.15",
+    "mocha": "^10.2.0",
     "monaco-editor": "^0.38.0",
     "mustache": "^4.2.0",
+    "node-red": "^3.0.2",
+    "node-red-node-test-helper": "^0.3.1",
     "prettier": "^2.6.2",
     "process": "^0.11.10",
-    "glob": "^7.2.0",
+    "should": "^13.2.3",
     "stream-http": "^3.2.0",
     "url": "^0.11.0",
     "util": "^0.12.5",
@@ -40,6 +45,7 @@
     "yaml": "^2.2.2"
   },
   "devDependencies": {
+    "jsonschema": "^1.4.1",
     "webpack": "^5.82.1",
     "webpack-cli": "^5.1.1"
   }

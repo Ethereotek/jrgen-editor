@@ -8,14 +8,6 @@
         "env": []
     },
     {
-        "id": "da13c66b783a1a3b",
-        "type": "tab",
-        "label": "Blueprints",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
         "id": "f2fd42354b38c8bc",
         "type": "tab",
         "label": "node-red-blueprints",
@@ -124,7 +116,8 @@
             "fce3bde55afe2dfe",
             "b2404c8ab272a2b3",
             "508a91c69611c103",
-            "a8af37f238b19835"
+            "a8af37f238b19835",
+            "dc1541d4d8ad85a8"
         ],
         "x": 134,
         "y": 439,
@@ -132,44 +125,31 @@
         "h": 522
     },
     {
-        "id": "917521be145e7dea",
+        "id": "715b0c1105a9696a",
         "type": "group",
-        "z": "da13c66b783a1a3b",
-        "name": "Generate Code FIles",
+        "z": "3021c112b8f44a27",
+        "name": "",
         "style": {
-            "fill": "#bfdbef",
+            "fill": "#bfbfbf",
             "label": true
         },
         "nodes": [
-            "88afddfc1793a1b7",
-            "d70dd00dca6a0cce",
-            "dbca8444dc244af2",
-            "08d0dc02271d9f00",
-            "d39aeb3c9eca5781",
-            "525255550e528ce0",
-            "87bb21fcace731b7",
-            "c2364cceab01c70e",
-            "db8ad56ff34e4481",
-            "a1f91f422015723f",
-            "042b48527aa3aa9c",
-            "ccacbe41f0d86fdd",
-            "00e9db61cf1a7ac9",
-            "c9051f1e5866c88f",
-            "9d80250f60353b1e",
-            "3e5ac603ae30f732",
-            "a1ec82b476b04505",
-            "110febe7c3cb06a7",
-            "336f4a4c4510a4a1",
-            "6960e6e9054bcb18",
-            "c08815402cd2dfa9",
-            "cfacc98270f20675",
-            "e09d1e1597d3929c",
-            "2c840ddce9d03835"
+            "1d7d972ae4d3f2e9",
+            "a14d5a61df3aa858",
+            "c6768db38e7cd7ad",
+            "b182cc93e4e5284d",
+            "c5b40e85dc599f63",
+            "87aef51dbd39a0d7",
+            "fb9df27c27afc42b",
+            "fd31ccf56aa82e6e",
+            "93a67692ce18fb82",
+            "4b4d9a4942576975",
+            "3b3c2fe06d190ca6"
         ],
-        "x": 54,
-        "y": 59,
-        "w": 1072,
-        "h": 562
+        "x": 814,
+        "y": 1079,
+        "w": 652,
+        "h": 342
     },
     {
         "id": "b98fd0058ee5ea60",
@@ -413,8 +393,8 @@
         "y": 660,
         "wires": [
             [
-                "a7523c7f699d4cb5",
-                "a8af37f238b19835"
+                "a8af37f238b19835",
+                "dc1541d4d8ad85a8"
             ]
         ]
     },
@@ -1221,12 +1201,10 @@
         "z": "3021c112b8f44a27",
         "g": "d655e1845c1c0605",
         "name": "",
-        "x": 460,
+        "x": 260,
         "y": 700,
         "wires": [
-            [
-                "b523048bb88a13a2"
-            ]
+            []
         ]
     },
     {
@@ -1413,744 +1391,18 @@
         "wires": []
     },
     {
-        "id": "88afddfc1793a1b7",
-        "type": "function",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "generate model",
-        "func": "msg.payload = {\n    template:msg.template,\n    model: {\n        title: msg.schema.info.title.replace(/\\s/g, \"\"),\n        methods: Object.keys(msg.schema.methods).map((key) => {\n            return {\n                functionName: key.replace(/\\./g, \"_\"),\n                rpcName: key,\n            };\n        }),\n    }\n}\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 380,
-        "y": 180,
-        "wires": [
-            [
-                "c08815402cd2dfa9",
-                "525255550e528ce0"
-            ]
-        ]
-    },
-    {
-        "id": "d70dd00dca6a0cce",
-        "type": "http in",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "[GET] /jrgen-editor/templates/clients/web-js",
-        "url": "/jrgen-editor/templates/clients/web-js",
-        "method": "get",
-        "upload": false,
-        "swaggerDoc": "",
-        "x": 250,
-        "y": 340,
-        "wires": [
-            [
-                "dbca8444dc244af2"
-            ]
-        ]
-    },
-    {
-        "id": "dbca8444dc244af2",
-        "type": "file in",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "[READ] api-client.js.mustache",
-        "filename": "/data/jrgen-editor/blueprints/js-client/api-client.js.mustache",
-        "filenameType": "str",
-        "format": "utf8",
-        "chunk": false,
-        "sendError": false,
-        "encoding": "none",
-        "allProps": false,
-        "x": 290,
-        "y": 380,
-        "wires": [
-            [
-                "08d0dc02271d9f00"
-            ]
-        ]
-    },
-    {
-        "id": "08d0dc02271d9f00",
-        "type": "change",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "template",
-                "pt": "msg",
-                "to": "payload",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 330,
-        "y": 420,
-        "wires": [
-            [
-                "db8ad56ff34e4481"
-            ]
-        ]
-    },
-    {
-        "id": "d39aeb3c9eca5781",
-        "type": "change",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "schema",
-                "pt": "msg",
-                "to": "payload",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 380,
-        "y": 140,
-        "wires": [
-            [
-                "88afddfc1793a1b7"
-            ]
-        ]
-    },
-    {
-        "id": "525255550e528ce0",
-        "type": "debug",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "log artifacts",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 570,
-        "y": 140,
-        "wires": []
-    },
-    {
-        "id": "87bb21fcace731b7",
-        "type": "inject",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 200,
-        "y": 300,
-        "wires": [
-            [
-                "dbca8444dc244af2"
-            ]
-        ]
-    },
-    {
-        "id": "c2364cceab01c70e",
-        "type": "file",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "[WRITE] api-client-example.js",
-        "filename": "/data/jrgen-editor/blueprints/js-client/api-client-example.js",
-        "filenameType": "str",
-        "appendNewline": true,
-        "createDir": false,
-        "overwriteFile": "true",
-        "encoding": "none",
-        "x": 290,
-        "y": 580,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "db8ad56ff34e4481",
-        "type": "link call",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "call-get-schema.json",
-        "links": [
-            "fce3bde55afe2dfe"
-        ],
-        "linkType": "static",
-        "timeout": "30",
-        "x": 320,
-        "y": 460,
-        "wires": [
-            [
-                "c9051f1e5866c88f"
-            ]
-        ]
-    },
-    {
-        "id": "a1f91f422015723f",
-        "type": "link out",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "to-response",
-        "mode": "link",
-        "links": [
-            "d3cda662559e53d7"
-        ],
-        "x": 530,
-        "y": 540,
-        "wires": [],
-        "l": true
-    },
-    {
-        "id": "042b48527aa3aa9c",
-        "type": "change",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "template",
-                "pt": "msg",
-                "to": "payload",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 830,
-        "y": 420,
-        "wires": [
-            [
-                "ccacbe41f0d86fdd"
-            ]
-        ]
-    },
-    {
-        "id": "ccacbe41f0d86fdd",
-        "type": "link call",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "call-get-schema.json",
-        "links": [
-            "fce3bde55afe2dfe"
-        ],
-        "linkType": "static",
-        "timeout": "30",
-        "x": 820,
-        "y": 460,
-        "wires": [
-            [
-                "110febe7c3cb06a7"
-            ]
-        ]
-    },
-    {
-        "id": "00e9db61cf1a7ac9",
-        "type": "json",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "",
-        "property": "payload",
-        "action": "",
-        "pretty": false,
-        "x": 410,
-        "y": 100,
-        "wires": [
-            [
-                "d39aeb3c9eca5781"
-            ]
-        ]
-    },
-    {
-        "id": "c9051f1e5866c88f",
-        "type": "link call",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "call-generate-model",
-        "links": [
-            "6960e6e9054bcb18"
-        ],
-        "linkType": "static",
-        "timeout": "30",
-        "x": 320,
-        "y": 500,
-        "wires": [
-            [
-                "e09d1e1597d3929c"
-            ]
-        ]
-    },
-    {
-        "id": "9d80250f60353b1e",
-        "type": "file in",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "[READ] api-client.ts.mustache",
-        "filename": "/data/jrgen-editor/blueprints/ts-client/api-client.ts.mustache",
-        "filenameType": "str",
-        "format": "utf8",
-        "chunk": false,
-        "sendError": false,
-        "encoding": "none",
-        "allProps": false,
-        "x": 790,
-        "y": 380,
-        "wires": [
-            [
-                "042b48527aa3aa9c"
-            ]
-        ]
-    },
-    {
-        "id": "3e5ac603ae30f732",
-        "type": "http in",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "[GET] /jrgen-editor/templates/clients/web-ts",
-        "url": "/jrgen-editor/templates/clients/web-ts",
-        "method": "get",
-        "upload": false,
-        "swaggerDoc": "",
-        "x": 750,
-        "y": 340,
-        "wires": [
-            [
-                "9d80250f60353b1e"
-            ]
-        ]
-    },
-    {
-        "id": "a1ec82b476b04505",
-        "type": "file",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "[WRITE] api-client-example.ts",
-        "filename": "/data/jrgen-editor/blueprints/ts-client/api-client-example.ts",
-        "filenameType": "str",
-        "appendNewline": true,
-        "createDir": false,
-        "overwriteFile": "true",
-        "encoding": "none",
-        "x": 790,
-        "y": 580,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "110febe7c3cb06a7",
-        "type": "link call",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "call-generate-model",
-        "links": [
-            "6960e6e9054bcb18"
-        ],
-        "linkType": "static",
-        "timeout": "30",
-        "x": 820,
-        "y": 500,
-        "wires": [
-            [
-                "2c840ddce9d03835"
-            ]
-        ]
-    },
-    {
-        "id": "336f4a4c4510a4a1",
-        "type": "link out",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "to-response",
-        "mode": "link",
-        "links": [
-            "d3cda662559e53d7"
-        ],
-        "x": 1030,
-        "y": 540,
-        "wires": [],
-        "l": true
-    },
-    {
-        "id": "6960e6e9054bcb18",
-        "type": "link in",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "in-generate-model",
-        "links": [],
-        "x": 250,
-        "y": 100,
-        "wires": [
-            [
-                "00e9db61cf1a7ac9"
-            ]
-        ],
-        "l": true
-    },
-    {
-        "id": "c08815402cd2dfa9",
-        "type": "link out",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "return-artifacts",
-        "mode": "return",
-        "links": [],
-        "x": 580,
-        "y": 180,
-        "wires": [],
-        "l": true
-    },
-    {
-        "id": "cfacc98270f20675",
-        "type": "inject",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 700,
-        "y": 300,
-        "wires": [
-            [
-                "9d80250f60353b1e"
-            ]
-        ]
-    },
-    {
-        "id": "e09d1e1597d3929c",
-        "type": "function",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "generate artifacts",
-        "func": "let template = msg.payload.template;\n\nlet model = msg.payload.model;\nnode.warn(model)\nlet artifact = mustache.render(template, model);\nmsg.payload = artifact;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [
-            {
-                "var": "mustache",
-                "module": "mustache"
-            }
-        ],
-        "x": 330,
-        "y": 540,
-        "wires": [
-            [
-                "c2364cceab01c70e",
-                "a1f91f422015723f"
-            ]
-        ]
-    },
-    {
-        "id": "2c840ddce9d03835",
-        "type": "function",
-        "z": "da13c66b783a1a3b",
-        "g": "917521be145e7dea",
-        "name": "generate artifacts",
-        "func": "let template = msg.payload.template;\nlet model = msg.payload.model;\nlet artifact = mustache.render(template, model);\nmsg.payload = artifact;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [
-            {
-                "var": "mustache",
-                "module": "mustache"
-            }
-        ],
-        "x": 830,
-        "y": 540,
-        "wires": [
-            [
-                "a1ec82b476b04505",
-                "336f4a4c4510a4a1"
-            ]
-        ]
-    },
-    {
-        "id": "ad708588e464ce4f",
-        "type": "http in",
-        "z": "da13c66b783a1a3b",
-        "name": "[GET] /jrgen-editor/templates/docs/doc-md",
-        "url": "/jrgen-editor/templates/docs/doc-md",
-        "method": "get",
-        "upload": false,
-        "swaggerDoc": "",
-        "x": 360,
-        "y": 760,
-        "wires": [
-            [
-                "80382171a9eb19e8"
-            ]
-        ]
-    },
-    {
-        "id": "80382171a9eb19e8",
-        "type": "file in",
-        "z": "da13c66b783a1a3b",
-        "name": "[READ] api-reference.md.mustache",
-        "filename": "/data/jrgen-editor/blueprints/md-doc/api-reference.md.mustache",
-        "filenameType": "str",
-        "format": "utf8",
-        "chunk": false,
-        "sendError": false,
-        "encoding": "none",
-        "allProps": false,
-        "x": 380,
-        "y": 800,
-        "wires": [
-            [
-                "8b793b7e81c9068b"
-            ]
-        ]
-    },
-    {
-        "id": "7940d2c36eedead5",
-        "type": "function",
-        "z": "da13c66b783a1a3b",
-        "name": "generate md model",
-        "func": "const utils = context.get('utils');\n\nmsg.payload = {\n    template:msg.template,\n    model: {\n        title: msg.schema.info.title.replace(/\\s/g, \"\"),\n        version:msg.schema.info.version,\n        description: utils.normalizeMultiLineString(msg.schema.description),\n        methods: Object.keys(msg.schema.methods).map((key) => {\n            const methodSchema = msg.schema.methods[key];\n            node.warn(methodSchema)\n            return {\n                name: key,\n                summary: methodSchema.summary,\n                description:utils.normalizeMultiLineString(methodSchema.description),\n                params:utils\n                    .parsePropertyList(\"params\", methodSchema.params)\n                    .map((item)=>{\n                        item.constraints = item.constraints.replace(/\\|/g, \"\\\\|\");\n                        return item;\n                    }),\n                result: utils.parsePropertyList(\"result\", methodSchema.result),\n                errors:methodSchema.errors\n            };\n        }),\n    }\n}\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "// Code added here will be run once\n// whenever the node is started.\nfunction parsePropertyList(name, schema){\n    console.log('parsing property')\n    if (!schema) {\n        return [];\n    }\n\n    if (schema.allOf) {\n        for (const item of schema.allOf) {\n            for (const key of Object.keys(item)) {\n                schema[key] = item.key;\n            }\n        }\n    }\n\n    let entries = [];\n\n    entries.push({\n        name: name,\n        type: schema.type,\n        description: schema.description || \"\",\n        constraints: Object.entries({\n            minLength: schema.minLength,\n            maxLength: schema.maxLength,\n            pattern: schema.pattern,\n            format: schema.format,\n            enum: schema.enum,\n            multipleOf: schema.multipleOf,\n            minimum: schema.minimum,\n            maximum: schema.maximum,\n            exclusiveMaximum: schema.exclusiveMaximum,\n            exclusiveMinimum: schema.exclusiveMinimum,\n            minItems: schema.minItems,\n            maxItems: schema.maxItems,\n            uniqueItems: schema.uniqueItems,\n            minProperties: schema.minProperties,\n            maxProperties: schema.maxProperties,\n            additionalProperties: schema.additionalProperties,\n            propertyNames: schema.propertyNames,\n            patternProperties: schema.propertyNames,\n            dependencies: schema.dependencies,\n            exclusive: schema.exclusive,\n        })\n            .filter(\n                ([constraintName, constraintValue]) => constraintValue !== undefined\n            )\n            .reduce((accumulator, [constraintName, constraintValue]) => {\n                if (typeof constraintValue === \"boolean\") {\n                    accumulator.push(constraintName);\n                } else {\n                    accumulator.push(`${constraintName}=\"${constraintValue}\"`);\n                }\n\n                return accumulator;\n            }, [])\n            .join(\", \"),\n        schema: JSON.stringify(schema, null, 2),\n\n    });\n    //console.log(entries)\n    if (schema.type === \"array\") {\n        if (Array.isArray(schema.items)) {\n            schema.items.forEach((item, index) => {\n                let selector = index;\n                if (item.name) {\n                    selector += \":\" + item.name;\n                }\n                entries = entries.concat(\n                    parsePropertyList(name + \"[\" + selector + \"]\", item)\n                );\n            });\n        } else {\n            entries = entries.concat(\n                parsePropertyList(name + \"[]\", schema.items)\n            );\n        }\n    } else if (schema.type === \"object\") {\n        Object.keys(schema.properties).forEach((key) => {\n            let connector = \"?.\";\n            if (schema.required && schema.required.includes(key)) {\n                connector = \".\";\n            }\n            entries = entries.concat(\n                parsePropertyList(\n                    name + connector + key,\n                    schema.properties[key]\n                )\n            );\n        });\n    }\n\n    if (schema.anyOf) {\n        schema.anyOf.forEach((item, index) => {\n            entries = entries.concat(\n                parsePropertyList(`${name}(${index})`, item)\n            );\n        });\n    }\n\n    if (schema.oneOf) {\n        schema.oneOf.forEach((item, index) => {\n            item.exclusive = true;\n            entries = entries.concat(\n                parsePropertyList(`${name}(${index})`, item)\n            );\n        });\n    }\n\n    return entries;\n};\nfunction normalizeMultiLineString(multiLineString, separator) {\n    if (!multiLineString) {\n        return \"\";\n    }\n    if (Array.isArray(multiLineString)) {\n        return multiLineString.join(separator || \"\\n\");\n    }\n    return multiLineString.toString();\n};\nconst utils = {\n    parsePropertyList,\n    normalizeMultiLineString\n}\ncontext.set(\"utils\", utils);",
-        "finalize": "",
-        "libs": [],
-        "x": 430,
-        "y": 1020,
-        "wires": [
-            [
-                "bb4e6e29a8257021"
-            ]
-        ]
-    },
-    {
-        "id": "8b793b7e81c9068b",
-        "type": "change",
-        "z": "da13c66b783a1a3b",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "template",
-                "pt": "msg",
-                "to": "payload",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 430,
-        "y": 840,
-        "wires": [
-            [
-                "50df04eec7609315"
-            ]
-        ]
-    },
-    {
-        "id": "50df04eec7609315",
-        "type": "link call",
-        "z": "da13c66b783a1a3b",
-        "name": "call-get-schema.json",
-        "links": [
-            "fce3bde55afe2dfe"
-        ],
-        "linkType": "static",
-        "timeout": "30",
-        "x": 420,
-        "y": 880,
-        "wires": [
-            [
-                "948091ed8de34f9f"
-            ]
-        ]
-    },
-    {
-        "id": "948091ed8de34f9f",
-        "type": "json",
-        "z": "da13c66b783a1a3b",
-        "name": "",
-        "property": "payload",
-        "action": "",
-        "pretty": false,
-        "x": 290,
-        "y": 920,
-        "wires": [
-            [
-                "774408b26ae4e9a1"
-            ]
-        ]
-    },
-    {
-        "id": "774408b26ae4e9a1",
-        "type": "json-refs-parser",
-        "z": "da13c66b783a1a3b",
-        "name": "",
-        "x": 440,
-        "y": 920,
-        "wires": [
-            [
-                "5b7b9f0b7a6db2d3"
-            ]
-        ]
-    },
-    {
-        "id": "bb4e6e29a8257021",
-        "type": "function",
-        "z": "da13c66b783a1a3b",
-        "name": "generate artifacts",
-        "func": "let template = msg.payload.template;\n\nlet model = msg.payload.model;\nnode.warn(model)\nlet artifact = mustache.render(template, model);\nmsg.payload = artifact;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [
-            {
-                "var": "mustache",
-                "module": "mustache"
-            }
-        ],
-        "x": 430,
-        "y": 1060,
-        "wires": [
-            [
-                "f059b2c49d921bbd"
-            ]
-        ]
-    },
-    {
-        "id": "f059b2c49d921bbd",
-        "type": "debug",
-        "z": "da13c66b783a1a3b",
-        "name": "debug 11",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 640,
-        "y": 1060,
-        "wires": []
-    },
-    {
-        "id": "259d20317ff962b6",
-        "type": "inject",
-        "z": "da13c66b783a1a3b",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 100,
-        "y": 800,
-        "wires": [
-            [
-                "80382171a9eb19e8"
-            ]
-        ]
-    },
-    {
-        "id": "5b7b9f0b7a6db2d3",
-        "type": "change",
-        "z": "da13c66b783a1a3b",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "schema",
-                "pt": "msg",
-                "to": "payload",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 440,
-        "y": 960,
-        "wires": [
-            [
-                "7940d2c36eedead5"
-            ]
-        ]
-    },
-    {
         "id": "1d7d972ae4d3f2e9",
         "type": "link call",
-        "z": "da13c66b783a1a3b",
+        "z": "3021c112b8f44a27",
+        "g": "715b0c1105a9696a",
         "name": "call-get-schema.json",
         "links": [
             "fce3bde55afe2dfe"
         ],
         "linkType": "static",
         "timeout": "30",
-        "x": 1100,
-        "y": 980,
+        "x": 1140,
+        "y": 1220,
         "wires": [
             [
                 "c5b40e85dc599f63"
@@ -2160,10 +1412,11 @@
     {
         "id": "a14d5a61df3aa858",
         "type": "jrgen",
-        "z": "da13c66b783a1a3b",
-        "name": "",
-        "x": 1150,
-        "y": 1100,
+        "z": "3021c112b8f44a27",
+        "g": "715b0c1105a9696a",
+        "name": "jrgen - generate artifact",
+        "x": 1130,
+        "y": 1300,
         "wires": [
             [
                 "3b3c2fe06d190ca6"
@@ -2173,14 +1426,16 @@
     {
         "id": "c6768db38e7cd7ad",
         "type": "inject",
-        "z": "da13c66b783a1a3b",
-        "name": "",
+        "z": "3021c112b8f44a27",
+        "g": "715b0c1105a9696a",
+        "name": "test docs-html",
         "props": [
             {
                 "p": "payload"
             },
             {
-                "p": "topic",
+                "p": "targetArtifact",
+                "v": "docs-html",
                 "vt": "str"
             }
         ],
@@ -2191,8 +1446,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 1140,
-        "y": 940,
+        "x": 930,
+        "y": 1220,
         "wires": [
             [
                 "1d7d972ae4d3f2e9"
@@ -2200,26 +1455,10 @@
         ]
     },
     {
-        "id": "b1c7301cb98a8454",
-        "type": "debug",
-        "z": "da13c66b783a1a3b",
-        "name": "debug 12",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1520,
-        "y": 1340,
-        "wires": []
-    },
-    {
         "id": "b182cc93e4e5284d",
         "type": "change",
-        "z": "da13c66b783a1a3b",
+        "z": "3021c112b8f44a27",
+        "g": "715b0c1105a9696a",
         "name": "",
         "rules": [
             {
@@ -2228,13 +1467,6 @@
                 "pt": "msg",
                 "to": "payload",
                 "tot": "msg"
-            },
-            {
-                "t": "set",
-                "p": "targetArtifact",
-                "pt": "msg",
-                "to": "docs-html",
-                "tot": "str"
             }
         ],
         "action": "",
@@ -2242,8 +1474,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1120,
-        "y": 1060,
+        "x": 1160,
+        "y": 1260,
         "wires": [
             [
                 "a14d5a61df3aa858"
@@ -2253,13 +1485,14 @@
     {
         "id": "c5b40e85dc599f63",
         "type": "json",
-        "z": "da13c66b783a1a3b",
+        "z": "3021c112b8f44a27",
+        "g": "715b0c1105a9696a",
         "name": "",
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 1150,
-        "y": 1020,
+        "x": 950,
+        "y": 1260,
         "wires": [
             [
                 "b182cc93e4e5284d"
@@ -2269,8 +1502,9 @@
     {
         "id": "87aef51dbd39a0d7",
         "type": "debug",
-        "z": "da13c66b783a1a3b",
-        "name": "debug 14",
+        "z": "3021c112b8f44a27",
+        "g": "715b0c1105a9696a",
+        "name": "[PRINT] - artifact",
         "active": true,
         "tosidebar": true,
         "console": false,
@@ -2279,143 +1513,33 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1480,
-        "y": 1140,
+        "x": 1150,
+        "y": 1380,
         "wires": []
-    },
-    {
-        "id": "4441012968316645",
-        "type": "file",
-        "z": "da13c66b783a1a3b",
-        "name": "",
-        "filename": "/data/testfile.html",
-        "filenameType": "str",
-        "appendNewline": true,
-        "createDir": false,
-        "overwriteFile": "true",
-        "encoding": "none",
-        "x": 1010,
-        "y": 1180,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "17587ded99840bfc",
-        "type": "change",
-        "z": "da13c66b783a1a3b",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "payload.resolvedArtifact[\"example-api-reference.html\"]",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1020,
-        "y": 1140,
-        "wires": [
-            [
-                "4441012968316645"
-            ]
-        ]
     },
     {
         "id": "fb9df27c27afc42b",
         "type": "http in",
-        "z": "da13c66b783a1a3b",
+        "z": "3021c112b8f44a27",
+        "g": "715b0c1105a9696a",
         "name": "[GET] /jrgen-editor/blueprints/:targetArtifact",
         "url": "/jrgen-editor/blueprints/:targetArtifact",
         "method": "get",
         "upload": false,
         "swaggerDoc": "",
-        "x": 890,
-        "y": 720,
+        "x": 1070,
+        "y": 1120,
         "wires": [
             [
-                "3674290094c83da0",
                 "fd31ccf56aa82e6e"
-            ]
-        ]
-    },
-    {
-        "id": "3674290094c83da0",
-        "type": "debug",
-        "z": "da13c66b783a1a3b",
-        "name": "debug 15",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1240,
-        "y": 720,
-        "wires": []
-    },
-    {
-        "id": "1faa5f1db09acf0a",
-        "type": "http request",
-        "z": "da13c66b783a1a3b",
-        "name": "",
-        "method": "GET",
-        "ret": "txt",
-        "paytoqs": false,
-        "url": "",
-        "persist": false,
-        "insecureHTTPParser": false,
-        "authType": "",
-        "senderr": false,
-        "headers": [],
-        "x": 750,
-        "y": 1160,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "9d263344c61d5566",
-        "type": "inject",
-        "z": "da13c66b783a1a3b",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "url",
-                "v": "http://localhost:1880/jrgen-editor/blueprints/docs-html",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 560,
-        "y": 1160,
-        "wires": [
-            [
-                "1faa5f1db09acf0a"
             ]
         ]
     },
     {
         "id": "fd31ccf56aa82e6e",
         "type": "change",
-        "z": "da13c66b783a1a3b",
+        "z": "3021c112b8f44a27",
+        "g": "715b0c1105a9696a",
         "name": "",
         "rules": [
             {
@@ -2431,8 +1555,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 820,
-        "y": 760,
+        "x": 1000,
+        "y": 1160,
         "wires": [
             [
                 "93a67692ce18fb82"
@@ -2442,7 +1566,8 @@
     {
         "id": "93a67692ce18fb82",
         "type": "switch",
-        "z": "da13c66b783a1a3b",
+        "z": "3021c112b8f44a27",
+        "g": "715b0c1105a9696a",
         "name": "",
         "property": "targetArtifact",
         "propertyType": "msg",
@@ -2457,8 +1582,8 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 890,
-        "y": 820,
+        "x": 1190,
+        "y": 1160,
         "wires": [
             [],
             [
@@ -2469,34 +1594,61 @@
     {
         "id": "4b4d9a4942576975",
         "type": "link out",
-        "z": "da13c66b783a1a3b",
+        "z": "3021c112b8f44a27",
+        "g": "715b0c1105a9696a",
         "name": "to-response",
         "mode": "link",
         "links": [
             "d3cda662559e53d7"
         ],
-        "x": 1270,
-        "y": 1180,
+        "x": 1370,
+        "y": 1340,
         "wires": [],
         "l": true
     },
     {
         "id": "3b3c2fe06d190ca6",
         "type": "function",
-        "z": "da13c66b783a1a3b",
-        "name": "send artifact text",
+        "z": "3021c112b8f44a27",
+        "g": "715b0c1105a9696a",
+        "name": "extract artifact text",
         "func": "let artifacts = msg.payload.resolvedArtifact\nfor (let [key, val] of Object.entries(artifacts)){\n    msg.payload = val\n    node.send(msg);\n}\n// return msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1250,
-        "y": 1140,
+        "x": 1150,
+        "y": 1340,
         "wires": [
             [
                 "87aef51dbd39a0d7",
                 "4b4d9a4942576975"
+            ]
+        ]
+    },
+    {
+        "id": "dc1541d4d8ad85a8",
+        "type": "function",
+        "z": "3021c112b8f44a27",
+        "g": "d655e1845c1c0605",
+        "name": "json-refs-parser",
+        "func": "async function resolveJsonRefs(msg) {\n    const schema = msg.payload;\n    try {\n        const resolvedSchema = await jsonRefs.resolveRefs(schema);\n        msg.payload = resolvedSchema.resolved;\n        return msg;\n    } catch (error) {\n        throw new Error('Failed to resolve JSON references: ' + error.message);\n    }\n}\n\nreturn resolveJsonRefs(msg);",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "jsonRefs",
+                "module": "json-refs"
+            }
+        ],
+        "x": 460,
+        "y": 700,
+        "wires": [
+            [
+                "b523048bb88a13a2"
             ]
         ]
     },
