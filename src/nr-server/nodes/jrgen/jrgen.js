@@ -15,12 +15,13 @@ module.exports = function(RED){
 		}
 		
 		async function generateArtifact(targetArtifact, schema){
-
-			const blueprint = await require(blueprints[targetArtifact])(schema);
-			const artifact = utils.buildArtifacts(blueprint);
-			return artifact;
-
-			
+			try{
+				const blueprint = await require(blueprints[targetArtifact])(schema);
+				const artifact = utils.buildArtifacts(blueprint);
+				return artifact;
+			}catch(err){
+				return err
+			}
 		}
 		node.on('input', async function(msg){
 			let schema = msg.schema;

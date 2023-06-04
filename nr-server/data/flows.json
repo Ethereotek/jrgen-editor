@@ -51,9 +51,9 @@
             "71fef5019b5ab158",
             "d7571e5e74bfe342"
         ],
-        "x": 134,
+        "x": 144,
         "y": 1079,
-        "w": 512,
+        "w": 502,
         "h": 342
     },
     {
@@ -80,9 +80,9 @@
             "ee264c58222ca125",
             "8ead84eef829c6c9"
         ],
-        "x": 134,
+        "x": 144,
         "y": 19,
-        "w": 752,
+        "w": 742,
         "h": 362
     },
     {
@@ -118,9 +118,9 @@
             "a8af37f238b19835",
             "dc1541d4d8ad85a8"
         ],
-        "x": 134,
+        "x": 144,
         "y": 439,
-        "w": 1232,
+        "w": 1222,
         "h": 522
     },
     {
@@ -138,12 +138,12 @@
             "c6768db38e7cd7ad",
             "b182cc93e4e5284d",
             "c5b40e85dc599f63",
-            "87aef51dbd39a0d7",
             "fb9df27c27afc42b",
             "fd31ccf56aa82e6e",
             "93a67692ce18fb82",
             "4b4d9a4942576975",
-            "3b3c2fe06d190ca6"
+            "3b3c2fe06d190ca6",
+            "87aef51dbd39a0d7"
         ],
         "x": 814,
         "y": 1079,
@@ -1422,7 +1422,7 @@
             },
             {
                 "p": "targetArtifact",
-                "v": "docs-html",
+                "v": "client-web-js",
                 "vt": "str"
             }
         ],
@@ -1461,7 +1461,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1160,
+        "x": 1180,
         "y": 1260,
         "wires": [
             [
@@ -1485,24 +1485,6 @@
                 "b182cc93e4e5284d"
             ]
         ]
-    },
-    {
-        "id": "87aef51dbd39a0d7",
-        "type": "debug",
-        "z": "3021c112b8f44a27",
-        "g": "715b0c1105a9696a",
-        "name": "[PRINT] - artifact",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1150,
-        "y": 1380,
-        "wires": []
     },
     {
         "id": "fb9df27c27afc42b",
@@ -1609,8 +1591,8 @@
         "y": 1340,
         "wires": [
             [
-                "87aef51dbd39a0d7",
-                "4b4d9a4942576975"
+                "4b4d9a4942576975",
+                "87aef51dbd39a0d7"
             ]
         ]
     },
@@ -1638,6 +1620,76 @@
                 "b523048bb88a13a2"
             ]
         ]
+    },
+    {
+        "id": "91d571dce79a1dd1",
+        "type": "http in",
+        "z": "3021c112b8f44a27",
+        "name": "[GET] /jrgen-editor/spec-schema.json",
+        "url": "/jrgen-editor/spec-schema.json",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 250,
+        "y": 1700,
+        "wires": [
+            [
+                "a149b899cde3694c"
+            ]
+        ]
+    },
+    {
+        "id": "a149b899cde3694c",
+        "type": "template",
+        "z": "3021c112b8f44a27",
+        "name": "spec_schema",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "json",
+        "syntax": "mustache",
+        "template": "{\n    \"$schema\": \"http://json-schema.org/schema#\",\n    \"type\": \"object\",\n    \"properties\": {\n        \"jrgen\": {\n            \"description\": \"Version of the jrgen spec.\",\n            \"type\": \"string\",\n            \"enum\": [\n                \"1.0\",\n                \"1.1\"\n            ]\n        },\n        \"jsonrpc\": {\n            \"description\": \"Version of the json-rpc protocol.\",\n            \"type\": \"string\",\n            \"enum\": [\n                \"2.0\"\n            ]\n        },\n        \"info\": {\n            \"description\": \"Meta information about the api.\",\n            \"type\": \"object\",\n            \"properties\": {\n                \"title\": {\n                    \"description\": \"Name of the api.\",\n                    \"type\": \"string\",\n                    \"minLength\": 1\n                },\n                \"description\": {\n                    \"description\": \"Description or usage information about the api.\",\n                    \"anyOf\": [\n                        {\n                            \"type\": \"string\"\n                        },\n                        {\n                            \"type\": \"array\",\n                            \"items\": {\n                                \"type\": \"string\"\n                            }\n                        }\n                    ]\n                },\n                \"version\": {\n                    \"description\": \"Current version of the api.\",\n                    \"type\": \"string\",\n                    \"minLength\": 3\n                }\n            },\n            \"required\": [\n                \"title\",\n                \"version\"\n            ]\n        },\n        \"definitions\": {\n            \"description\": \"Global definitions for use in the api.\",\n            \"type\": \"object\"\n        },\n        \"methods\": {\n            \"description\": \"Definitions of the available procedures in the api. A key equals to the name of a procedure.\",\n            \"type\": \"object\",\n            \"patternProperties\": {\n                \"^.*$\": {\n                    \"description\": \"Definition of an api procedure.\",\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"summary\": {\n                            \"description\": \"Short summary of what the procedure does.\",\n                            \"type\": \"string\"\n                        },\n                        \"description\": {\n                            \"description\": \"Longer description of what the procedure does.\",\n                            \"anyOf\": [\n                                {\n                                    \"type\": \"string\"\n                                },\n                                {\n                                    \"type\": \"array\",\n                                    \"items\": {\n                                        \"type\": \"string\"\n                                    }\n                                }\n                            ]\n                        },\n                        \"tags\": {\n                            \"description\": \"Tags for grouping similar procedures.\",\n                            \"type\": \"array\",\n                            \"items\": {\n                                \"description\": \"Tag for the procedure.\",\n                                \"type\": \"string\"\n                            }\n                        },\n                        \"params\": {\n                            \"description\": \"JSON-Schema of the procedure params.\",\n                            \"type\": \"object\",\n                            \"$ref\": \"http://json-schema.org/schema#\"\n                        },\n                        \"result\": {\n                            \"description\": \"JSON-Schema of the procedure result.\",\n                            \"type\": \"object\",\n                            \"$ref\": \"http://json-schema.org/schema#\"\n                        },\n                        \"errors\": {\n                            \"description\": \"Definition of possible error responses.\",\n                            \"type\": \"array\",\n                            \"items\": {\n                                \"description\": \"Definition of an error response.\",\n                                \"type\": \"object\",\n                                \"properties\": {\n                                    \"description\": {\n                                        \"description\": \"Description of what went wrong.\",\n                                        \"type\": \"string\"\n                                    },\n                                    \"code\": {\n                                        \"description\": \"Unique error code.\",\n                                        \"type\": \"number\"\n                                    },\n                                    \"message\": {\n                                        \"description\": \"Unique error message,\",\n                                        \"type\": \"string\"\n                                    },\n                                    \"data\": {\n                                        \"description\": \"JSON-Schema of the additonal error data.\",\n                                        \"type\": \"object\",\n                                        \"$ref\": \"http://json-schema.org/schema#\"\n                                    }\n                                },\n                                \"required\": [\n                                    \"code\",\n                                    \"message\"\n                                ]\n                            }\n                        }\n                    },\n                    \"required\": [\n                        \"summary\"\n                    ]\n                }\n            }\n        }\n    },\n    \"required\": [\n        \"jrgen\",\n        \"jsonrpc\",\n        \"info\",\n        \"methods\"\n    ]\n}",
+        "output": "str",
+        "x": 540,
+        "y": 1700,
+        "wires": [
+            [
+                "9c86afcf1f113346"
+            ]
+        ]
+    },
+    {
+        "id": "9c86afcf1f113346",
+        "type": "debug",
+        "z": "3021c112b8f44a27",
+        "name": "debug 14",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 1700,
+        "wires": []
+    },
+    {
+        "id": "87aef51dbd39a0d7",
+        "type": "debug",
+        "z": "3021c112b8f44a27",
+        "g": "715b0c1105a9696a",
+        "name": "[PRINT] - artifact",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1150,
+        "y": 1380,
+        "wires": []
     },
     {
         "id": "ab13afaf0f07cbc2",

@@ -51,9 +51,9 @@
             "71fef5019b5ab158",
             "d7571e5e74bfe342"
         ],
-        "x": 134,
+        "x": 144,
         "y": 1079,
-        "w": 512,
+        "w": 502,
         "h": 342
     },
     {
@@ -80,9 +80,9 @@
             "ee264c58222ca125",
             "8ead84eef829c6c9"
         ],
-        "x": 134,
+        "x": 144,
         "y": 19,
-        "w": 752,
+        "w": 742,
         "h": 362
     },
     {
@@ -111,7 +111,6 @@
             "495d88c2e35a38ab",
             "c5b79acd62af72d2",
             "0bb3b0c361a8cd37",
-            "a7523c7f699d4cb5",
             "e9c5c9149ef25f28",
             "fce3bde55afe2dfe",
             "b2404c8ab272a2b3",
@@ -119,9 +118,9 @@
             "a8af37f238b19835",
             "dc1541d4d8ad85a8"
         ],
-        "x": 134,
+        "x": 144,
         "y": 439,
-        "w": 1232,
+        "w": 1222,
         "h": 522
     },
     {
@@ -144,11 +143,14 @@
             "fd31ccf56aa82e6e",
             "93a67692ce18fb82",
             "4b4d9a4942576975",
-            "3b3c2fe06d190ca6"
+            "3b3c2fe06d190ca6",
+            "3278a1104a8330ed",
+            "6cb8ea6b92785a24",
+            "8bef7e81ff2bc9b0"
         ],
         "x": 814,
         "y": 1079,
-        "w": 652,
+        "w": 672,
         "h": 342
     },
     {
@@ -1196,18 +1198,6 @@
         "wires": []
     },
     {
-        "id": "a7523c7f699d4cb5",
-        "type": "json-refs-parser",
-        "z": "3021c112b8f44a27",
-        "g": "d655e1845c1c0605",
-        "name": "",
-        "x": 260,
-        "y": 700,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "fce3bde55afe2dfe",
         "type": "link in",
         "z": "3021c112b8f44a27",
@@ -1419,7 +1409,7 @@
         "y": 1300,
         "wires": [
             [
-                "3b3c2fe06d190ca6"
+                "8bef7e81ff2bc9b0"
             ]
         ]
     },
@@ -1435,7 +1425,7 @@
             },
             {
                 "p": "targetArtifact",
-                "v": "docs-html",
+                "v": "client-web-js",
                 "vt": "str"
             }
         ],
@@ -1474,7 +1464,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1160,
+        "x": 1180,
         "y": 1260,
         "wires": [
             [
@@ -1531,7 +1521,8 @@
         "y": 1120,
         "wires": [
             [
-                "fd31ccf56aa82e6e"
+                "fd31ccf56aa82e6e",
+                "3278a1104a8330ed"
             ]
         ]
     },
@@ -1587,7 +1578,8 @@
         "wires": [
             [],
             [
-                "1d7d972ae4d3f2e9"
+                "1d7d972ae4d3f2e9",
+                "6cb8ea6b92785a24"
             ]
         ]
     },
@@ -1651,6 +1643,109 @@
                 "b523048bb88a13a2"
             ]
         ]
+    },
+    {
+        "id": "91d571dce79a1dd1",
+        "type": "http in",
+        "z": "3021c112b8f44a27",
+        "name": "[GET] /jrgen-editor/spec-schema.json",
+        "url": "/jrgen-editor/spec-schema.json",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 250,
+        "y": 1700,
+        "wires": [
+            [
+                "a149b899cde3694c"
+            ]
+        ]
+    },
+    {
+        "id": "a149b899cde3694c",
+        "type": "template",
+        "z": "3021c112b8f44a27",
+        "name": "spec_schema",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "json",
+        "syntax": "mustache",
+        "template": "{\n    \"$schema\": \"http://json-schema.org/schema#\",\n    \"type\": \"object\",\n    \"properties\": {\n        \"jrgen\": {\n            \"description\": \"Version of the jrgen spec.\",\n            \"type\": \"string\",\n            \"enum\": [\n                \"1.0\",\n                \"1.1\"\n            ]\n        },\n        \"jsonrpc\": {\n            \"description\": \"Version of the json-rpc protocol.\",\n            \"type\": \"string\",\n            \"enum\": [\n                \"2.0\"\n            ]\n        },\n        \"info\": {\n            \"description\": \"Meta information about the api.\",\n            \"type\": \"object\",\n            \"properties\": {\n                \"title\": {\n                    \"description\": \"Name of the api.\",\n                    \"type\": \"string\",\n                    \"minLength\": 1\n                },\n                \"description\": {\n                    \"description\": \"Description or usage information about the api.\",\n                    \"anyOf\": [\n                        {\n                            \"type\": \"string\"\n                        },\n                        {\n                            \"type\": \"array\",\n                            \"items\": {\n                                \"type\": \"string\"\n                            }\n                        }\n                    ]\n                },\n                \"version\": {\n                    \"description\": \"Current version of the api.\",\n                    \"type\": \"string\",\n                    \"minLength\": 3\n                }\n            },\n            \"required\": [\n                \"title\",\n                \"version\"\n            ]\n        },\n        \"definitions\": {\n            \"description\": \"Global definitions for use in the api.\",\n            \"type\": \"object\"\n        },\n        \"methods\": {\n            \"description\": \"Definitions of the available procedures in the api. A key equals to the name of a procedure.\",\n            \"type\": \"object\",\n            \"patternProperties\": {\n                \"^.*$\": {\n                    \"description\": \"Definition of an api procedure.\",\n                    \"type\": \"object\",\n                    \"properties\": {\n                        \"summary\": {\n                            \"description\": \"Short summary of what the procedure does.\",\n                            \"type\": \"string\"\n                        },\n                        \"description\": {\n                            \"description\": \"Longer description of what the procedure does.\",\n                            \"anyOf\": [\n                                {\n                                    \"type\": \"string\"\n                                },\n                                {\n                                    \"type\": \"array\",\n                                    \"items\": {\n                                        \"type\": \"string\"\n                                    }\n                                }\n                            ]\n                        },\n                        \"tags\": {\n                            \"description\": \"Tags for grouping similar procedures.\",\n                            \"type\": \"array\",\n                            \"items\": {\n                                \"description\": \"Tag for the procedure.\",\n                                \"type\": \"string\"\n                            }\n                        },\n                        \"params\": {\n                            \"description\": \"JSON-Schema of the procedure params.\",\n                            \"type\": \"object\",\n                            \"$ref\": \"http://json-schema.org/schema#\"\n                        },\n                        \"result\": {\n                            \"description\": \"JSON-Schema of the procedure result.\",\n                            \"type\": \"object\",\n                            \"$ref\": \"http://json-schema.org/schema#\"\n                        },\n                        \"errors\": {\n                            \"description\": \"Definition of possible error responses.\",\n                            \"type\": \"array\",\n                            \"items\": {\n                                \"description\": \"Definition of an error response.\",\n                                \"type\": \"object\",\n                                \"properties\": {\n                                    \"description\": {\n                                        \"description\": \"Description of what went wrong.\",\n                                        \"type\": \"string\"\n                                    },\n                                    \"code\": {\n                                        \"description\": \"Unique error code.\",\n                                        \"type\": \"number\"\n                                    },\n                                    \"message\": {\n                                        \"description\": \"Unique error message,\",\n                                        \"type\": \"string\"\n                                    },\n                                    \"data\": {\n                                        \"description\": \"JSON-Schema of the additonal error data.\",\n                                        \"type\": \"object\",\n                                        \"$ref\": \"http://json-schema.org/schema#\"\n                                    }\n                                },\n                                \"required\": [\n                                    \"code\",\n                                    \"message\"\n                                ]\n                            }\n                        }\n                    },\n                    \"required\": [\n                        \"summary\"\n                    ]\n                }\n            }\n        }\n    },\n    \"required\": [\n        \"jrgen\",\n        \"jsonrpc\",\n        \"info\",\n        \"methods\"\n    ]\n}",
+        "output": "str",
+        "x": 540,
+        "y": 1700,
+        "wires": [
+            [
+                "9c86afcf1f113346"
+            ]
+        ]
+    },
+    {
+        "id": "9c86afcf1f113346",
+        "type": "debug",
+        "z": "3021c112b8f44a27",
+        "name": "debug 14",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 1700,
+        "wires": []
+    },
+    {
+        "id": "3278a1104a8330ed",
+        "type": "debug",
+        "z": "3021c112b8f44a27",
+        "g": "715b0c1105a9696a",
+        "name": "debug 15",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1380,
+        "y": 1120,
+        "wires": []
+    },
+    {
+        "id": "6cb8ea6b92785a24",
+        "type": "debug",
+        "z": "3021c112b8f44a27",
+        "g": "715b0c1105a9696a",
+        "name": "debug 16",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1380,
+        "y": 1160,
+        "wires": []
+    },
+    {
+        "id": "8bef7e81ff2bc9b0",
+        "type": "debug",
+        "z": "3021c112b8f44a27",
+        "g": "715b0c1105a9696a",
+        "name": "debug 17",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1380,
+        "y": 1300,
+        "wires": []
     },
     {
         "id": "ab13afaf0f07cbc2",

@@ -13,6 +13,9 @@ The uri for the editor is `/jrgen-editor`.
 
 The container will run on port 1880 by default, use `-p` to map to a different port, for example: `docker run -d -p 9100:1880 jrgen-editor`. In this example, you would navigate to the editor by typing `http://localhost:9100/jrgen-editor`.
 
+## Using the flows.json 
+You can also import the flows.json file and run it on your local machine. For this to work, you will also have to install the jrgen node. In node-red, navigate to the Manage Palette>Install>Install tab and click the upload button; select the supplied .tgz file.
+
 ## Editing your schema
 You can edit the schema in either json or yaml. To change the language, use the `Edit` drop down to select your preferred language. The schema will always save be saved to the server as JSON, however, you can download the either the JSON or YAML using the `File` drop down. 
 

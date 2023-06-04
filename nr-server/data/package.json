@@ -4,9 +4,10 @@
     "version": "0.0.1",
     "private": true,
     "dependencies": {
+        "glob": "^7.2.0",
         "json-refs": "^3.0.15",
+        "json-schema-to-typescript": "^13.0.1",
         "mustache": "^4.2.0",
-        "node-red-node-sqlite": "~1.0.3",
-        "glob": "^7.2.0"
+        "node-red-node-sqlite": "~1.0.3"
     }
 }

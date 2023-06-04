@@ -188,8 +188,8 @@
       </button>
       <div class="dropdown-menu">
         <p class="dropdown-item" @click="downloadCodeFile('client-web-js')">JavaScript</p>
-        <p class="dropdown-item" @click="downloadCodeFile('client-web-ts')">TypsScript</p>
-        <p class="dropdown-item" @click="downloadCodeFile('client-web-nr')">NodeRED</p>
+        <!-- <p class="dropdown-item" @click="downloadCodeFile('client-web-ts')">TypsScript</p> -->
+        <!-- <p class="dropdown-item" @click="downloadCodeFile('client-web-nr')">NodeRED</p> -->
       </div>
     </div>
     <div class="dropdown">
@@ -245,14 +245,14 @@
 
 
         </div>
-        <div class="card border">
+        <!-- <div class="card border">
           <div class="card-block">
             <h5>Server</h5>
             <div class="flex">
               <select class="form-select form-control server-select" id="server-protocol" v-model="serverProtocol" @change="updateServerProtocol">
                 <option>UDP</option>
                 <option>TCP</option>
-                <!-- <option>MQTT</option> -->
+
               </select>
               <select v-if="protocolIsMqtt" class="form-select form-control server-select">
                 <option v-if="schema.topics" v-for="topic in schema.topics">{{topic}}</option>
@@ -263,7 +263,7 @@
 
             </div>
           </div>
-        </div>
+        </div> -->
         <div class="card method" :id="method.id" v-for="method in data">
           <div class="card-header text-light bg-dark" data-toggle="collapse" @click="collapseMethod(method.id)">
             <h4>
@@ -342,8 +342,8 @@
                     <!-- <div class="border"> -->
                     <div class="card">
                       <h5>Request example</h5>
-                      <button type="button" class="btn btn-primary" style="width:100px"
-                        @click="sendRPC(method.requestExample)">Send</button>
+                      <!-- <button type="button" class="btn btn-primary" style="width:100px"
+                        @click="sendRPC(method.requestExample)">Send</button> -->
                       <pre class="bg-light">{{method.requestExample}}</pre>
                     </div>
 

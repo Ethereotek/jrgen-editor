@@ -30,6 +30,7 @@
   "dependencies": {
     "glob": "^7.2.0",
     "json-refs": "^3.0.15",
+    "json-schema-to-typescript": "^13.0.1",
     "mocha": "^10.2.0",
     "monaco-editor": "^0.38.0",
     "mustache": "^4.2.0",

@@ -15,15 +15,20 @@ module.exports = function(RED){
 		}
 		
 		async function generateArtifact(targetArtifact, schema){
+			try{
+				const blueprint = await require(blueprints[targetArtifact])(schema);
+				const artifact = utils.buildArtifacts(blueprint);
+				return artifact;
+			}catch(err){
+				return err
+			}
 
-			const blueprint = await require(blueprints[targetArtifact])(schema);
-			const artifact = utils.buildArtifacts(blueprint);
-			return artifact;
 
 			
 		}
 		node.on('input', async function(msg){
 			let schema = msg.schema;
+			node.warn(schema)
 			let targetArtifact = msg.targetArtifact;
 
 			if(!schema || !targetArtifact){
