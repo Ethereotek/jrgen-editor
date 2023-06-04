@@ -16,22 +16,6 @@
         "env": []
     },
     {
-        "id": "6872e72f4ada9225",
-        "type": "tab",
-        "label": "UDP Server Template",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
-        "id": "8fc52c2ecdccb9b1",
-        "type": "tab",
-        "label": "MQTT Client Template",
-        "disabled": false,
-        "info": "",
-        "env": []
-    },
-    {
         "id": "5e37ef9d739b77e1",
         "type": "group",
         "z": "3021c112b8f44a27",
@@ -53,7 +37,7 @@
         ],
         "x": 134,
         "y": 1079,
-        "w": 512,
+        "w": 522,
         "h": 342
     },
     {
@@ -82,7 +66,7 @@
         ],
         "x": 134,
         "y": 19,
-        "w": 752,
+        "w": 762,
         "h": 362
     },
     {
@@ -120,7 +104,7 @@
         ],
         "x": 134,
         "y": 439,
-        "w": 1232,
+        "w": 1242,
         "h": 522
     },
     {
@@ -145,9 +129,9 @@
             "4b4d9a4942576975",
             "3b3c2fe06d190ca6"
         ],
-        "x": 814,
+        "x": 804,
         "y": 1079,
-        "w": 652,
+        "w": 662,
         "h": 342
     },
     {
@@ -2067,155 +2051,6 @@
         "encoding": "none",
         "x": 330,
         "y": 800,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "f14d77cda16f49f3",
-        "type": "udp in",
-        "z": "6872e72f4ada9225",
-        "name": "",
-        "iface": "",
-        "port": "${port_in}",
-        "ipv": "udp4",
-        "multicast": "false",
-        "group": "",
-        "datatype": "utf8",
-        "x": 650,
-        "y": 140,
-        "wires": [
-            [
-                "da220ddabafa439a"
-            ]
-        ]
-    },
-    {
-        "id": "da220ddabafa439a",
-        "type": "json",
-        "z": "6872e72f4ada9225",
-        "name": "",
-        "property": "payload",
-        "action": "",
-        "pretty": false,
-        "x": 670,
-        "y": 180,
-        "wires": [
-            [
-                "7876a1acf1ee8f96"
-            ]
-        ]
-    },
-    {
-        "id": "7876a1acf1ee8f96",
-        "type": "switch",
-        "z": "6872e72f4ada9225",
-        "name": "",
-        "property": "payload.method",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "",
-                "vt": "str"
-            }
-        ],
-        "checkall": "false",
-        "repair": false,
-        "outputs": 1,
-        "x": 670,
-        "y": 220,
-        "wires": [
-            [
-                "dd9e4b215f1fbf02"
-            ]
-        ]
-    },
-    {
-        "id": "dd9e4b215f1fbf02",
-        "type": "function",
-        "z": "6872e72f4ada9225",
-        "name": "function 2",
-        "func": "\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 920,
-        "y": 220,
-        "wires": [
-            [
-                "ec578695124d77e7"
-            ]
-        ]
-    },
-    {
-        "id": "ec578695124d77e7",
-        "type": "udp out",
-        "z": "6872e72f4ada9225",
-        "name": "",
-        "addr": "",
-        "iface": "",
-        "port": "${port_out}",
-        "ipv": "udp4",
-        "outport": "",
-        "base64": false,
-        "multicast": "false",
-        "x": 1180,
-        "y": 220,
-        "wires": []
-    },
-    {
-        "id": "386efde1b97328eb",
-        "type": "mqtt in",
-        "z": "8fc52c2ecdccb9b1",
-        "name": "",
-        "topic": "/",
-        "qos": "2",
-        "datatype": "auto-detect",
-        "broker": "b98fd0058ee5ea60",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 290,
-        "y": 240,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "47d1628dadcae412",
-        "type": "mqtt out",
-        "z": "8fc52c2ecdccb9b1",
-        "name": "",
-        "topic": "/",
-        "qos": "2",
-        "retain": "",
-        "respTopic": "",
-        "contentType": "",
-        "userProps": "",
-        "correl": "",
-        "expiry": "",
-        "broker": "b98fd0058ee5ea60",
-        "x": 730,
-        "y": 240,
-        "wires": []
-    },
-    {
-        "id": "67eb2e6d716ae68e",
-        "type": "function",
-        "z": "8fc52c2ecdccb9b1",
-        "name": "function 3",
-        "func": "\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 520,
-        "y": 240,
         "wires": [
             []
         ]

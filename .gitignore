@@ -36,6 +36,7 @@ _OLD/
 _tests/
 
 # node-red
+/nr-server
 nr-server/data/context
 flows_cred.json
 *.backup
