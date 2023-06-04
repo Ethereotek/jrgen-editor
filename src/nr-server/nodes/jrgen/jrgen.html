@@ -1,0 +1,39 @@
+<script type="text/javascript">
+    RED.nodes.registerType('jrgen',{
+        category: 'function',
+        color: '#ae3edd',
+        defaults: {
+            name: {value:""}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "function.svg",
+        label: function() {
+            return this.name||"jrgen";
+        }
+    });
+</script>
+
+<script type="text/html" data-template-name="jrgen">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="jrgen">
+    <p>Generates documents and scripts from JSON schema using the jrgen package.
+
+        The `msg` object must contain a `schema` property and `targetArtifact` property. The schema refers to the API spec, which should be a JSON schema. The `targetArtifact` is the type of document you want to generate, the options are:
+        <table>
+            <tr>
+                <td>docs-html</td>
+                <td>docs-md</td>
+                <td>client-web-js</td>
+                <td>client-web-ts</td>
+                <td>server-node-js</td>
+                <td>spec-postman</td>
+            </tr>
+        </table>
+    </p>
+</script>

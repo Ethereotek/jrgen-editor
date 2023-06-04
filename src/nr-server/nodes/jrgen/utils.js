@@ -1,6 +1,37 @@
-const $RefParser = require("json-schema-ref-parser");
+const fs = require("fs-extra");
+const path = require("path");
+const $RefParser = require("json-refs");
+// const prettier = require("prettier");
+const glob = require("glob");
+const mustache = require("mustache");
 
-normalizeMultiLineString = (multiLineString, separator) => {
+exports.loadFileTreeFrom = (inputPath) => {
+  const fileTree = {};
+  glob
+    .sync(`${inputPath}/**/*`)
+    .filter((filePath) => {
+      return fs.lstatSync(filePath).isFile();
+    })
+    .forEach((filePath) => {
+      fileTree[path.relative(inputPath, filePath)] = fs.readFileSync(filePath, {
+        encoding: "utf8",
+      });
+    });
+  return fileTree;
+};
+
+exports.saveFileTreeTo = (fileTree, outputPath) => {
+  outputPath = path.normalize(outputPath || process.cwd());
+
+  Object.keys(fileTree).forEach((relativeFilePath) => {
+    fs.outputFile(
+      path.join(outputPath, relativeFilePath),
+      fileTree[relativeFilePath]
+    );
+  });
+};
+
+exports.normalizeMultiLineString = (multiLineString, separator) => {
   if (!multiLineString) {
     return "";
   }
@@ -10,12 +41,22 @@ normalizeMultiLineString = (multiLineString, separator) => {
   return multiLineString.toString();
 };
 
-generateRequestExample = (methodName, paramsSchema) => {
+exports.gatherBlueprints = () => {
+  return glob
+    .sync(__dirname + "/../../{@**/,}jrgen*/**/*.jrgen.blueprint.js")
+    .reduce((acc, blueprintPath) => {
+      const blueprintId = path.basename(blueprintPath, ".jrgen.blueprint.js");
+      acc[blueprintId] = blueprintPath;
+      return acc;
+    }, {});
+};
+
+exports.generateRequestExample = (methodName, paramsSchema) => {
   let example =  {
     jsonrpc: "2.0",
     id: "1234567890",
     method: methodName,
-    params: generateExample(paramsSchema),
+    params: exports.generateExample(paramsSchema),
   }
   //console.log("request example = ",example)
   return JSON.stringify(
@@ -23,26 +64,26 @@ generateRequestExample = (methodName, paramsSchema) => {
       jsonrpc: "2.0",
       id: "1234567890",
       method: methodName,
-      params: generateExample(paramsSchema),
+      params: exports.generateExample(paramsSchema),
     },
     null,
     2
   );
 };
 
-generateResponseExample = (resultSchema) => {
+exports.generateResponseExample = (resultSchema) => {
   return JSON.stringify(
     {
       jsonrpc: "2.0",
       id: "1234567890",
-      result: generateExample(resultSchema),
+      result: exports.generateExample(resultSchema),
     },
     null,
     2
   );
 };
 
-generateExample = (schema) => {
+exports.generateExample = (schema) => {
   console.log('generating example')
   if (!schema) {
    // console.log('generating example: no schema')
@@ -69,7 +110,7 @@ generateExample = (schema) => {
   if (schema.type === "object") {
     return Object.entries(schema.properties).reduce(
       (accumulator, [propertyKey, propertyValue]) => {
-        accumulator[propertyKey] = generateExample(propertyValue);
+        accumulator[propertyKey] = exports.generateExample(propertyValue);
         return accumulator;
       },
       {}
@@ -78,16 +119,16 @@ generateExample = (schema) => {
 
   if (schema.type === "array") {
     if (Array.isArray(schema.items)) {
-      return schema.items.map((item) => generateExample(item));
+      return schema.items.map((item) => exports.generateExample(item));
     } else {
-      return [generateExample(schema.items)];
+      return [exports.generateExample(schema.items)];
     }
   }
 
   for (const item of [schema.anyOf, schema.oneOf, schema.allOf]
     .filter((item) => !!item)
     .flat()) {
-    const example = generateExample(item);
+    const example = exports.generateExample(item);
     
     if (example) {
       
@@ -97,7 +138,7 @@ generateExample = (schema) => {
   }
 };
 
-parsePropertyList = (name, schema) => {
+exports.parsePropertyList = (name, schema) => {
   console.log('parsing property')
   if (!schema) {
     return [];
@@ -164,12 +205,12 @@ parsePropertyList = (name, schema) => {
           selector += ":" + item.name;
         }
         entries = entries.concat(
-          parsePropertyList(name + "[" + selector + "]", item)
+          exports.parsePropertyList(name + "[" + selector + "]", item)
         );
       });
     } else {
       entries = entries.concat(
-        parsePropertyList(name + "[]", schema.items)
+        exports.parsePropertyList(name + "[]", schema.items)
       );
     }
   } else if (schema.type === "object") {
@@ -179,7 +220,7 @@ parsePropertyList = (name, schema) => {
         connector = ".";
       }
       entries = entries.concat(
-        parsePropertyList(
+        exports.parsePropertyList(
           name + connector + key,
           schema.properties[key]
         )
@@ -190,7 +231,7 @@ parsePropertyList = (name, schema) => {
   if (schema.anyOf) {
     schema.anyOf.forEach((item, index) => {
       entries = entries.concat(
-        parsePropertyList(`${name}(${index})`, item)
+        exports.parsePropertyList(`${name}(${index})`, item)
       );
     });
   }
@@ -199,7 +240,7 @@ parsePropertyList = (name, schema) => {
     schema.oneOf.forEach((item, index) => {
       item.exclusive = true;
       entries = entries.concat(
-        parsePropertyList(`${name}(${index})`, item)
+        exports.parsePropertyList(`${name}(${index})`, item)
       );
     });
   }
@@ -207,13 +248,72 @@ parsePropertyList = (name, schema) => {
   return entries;
 };
 
-resolveSchemaRefs = async (schema) => {
+exports.resolveSchemaRefs = async (schema) => {
   return new Promise((resolve) => {
-    $RefParser.dereference(schema, (error, schema) => {
+    $RefParser.resolveRefs(schema, (error, schema) => {
       if (error) {
         throw error;
       }
       resolve(schema);
     });
   });
+};
+
+exports.loadSchema = (schemaPath) => {
+  if (!path.isAbsolute(schemaPath)) {
+    schemaPath = path.join(process.cwd(), schemaPath);
+  }
+
+  return exports.resolveSchemaRefs(schemaPath);
+};
+
+// exports.prettifyFileTree = (fileTree) => {
+//   Object.keys(fileTree).forEach((key) => {
+//     let parser;
+//     if (key.endsWith(".js")) {
+//       parser = "babel";
+//     }
+//     if (key.endsWith(".ts")) {
+//       parser = "typescript";
+//     }
+//     if (key.endsWith(".css") || key.endsWith(".scss")) {
+//       parser = "postcss";
+//     }
+//     if (key.endsWith(".json")) {
+//       parser = "json";
+//     }
+//     if (key.endsWith(".md")) {
+//       parser = "markdown";
+//     }
+//     if (parser) {
+//       fileTree[key] = Buffer.from(
+//         prettier.format(fileTree[key].toString(), {
+//           parser,
+//         }),
+//         "utf-8"
+//       );
+//     }
+//   });
+// };
+
+exports.buildArtifacts = (artifactsBlueprint) => {
+  const artifacts = {};
+
+  const templateKeys = Object.keys(artifactsBlueprint.templates);
+  for (const templateKey of templateKeys) {
+    let artifact = artifactsBlueprint.templates[templateKey];
+    let artifactPath = templateKey;
+
+    if (templateKey.endsWith(".mustache")) {
+      artifact = mustache.render(
+        artifactsBlueprint.templates[templateKey],
+        artifactsBlueprint.model
+      );
+      artifactPath = artifactPath.replace(/\.mustache$/, "");
+    }
+
+    artifacts[artifactPath] = artifact//Buffer.from(artifact, "utf-8");
+  }
+
+  return artifacts;
 };

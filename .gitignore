@@ -30,6 +30,19 @@ build/Release
 node_modules
 jspm_packages
 
+# test directories
+sandbox/
+_OLD/
+_tests/
+
+# node-red
+/nr-server
+nr-server/data/context
+flows_cred.json
+*.backup
+/src/_jrgen-editor
+
+
 # Optional npm cache directory
 .npm
 
@@ -38,3 +51,8 @@ jspm_packages
 
 # misc
 TODO.md
+dist/
+examples/
+
+# OS
+.DS_Store

@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>jrgen-editor</title>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <!-- <script src="/vue-unpkg.js"></script> -->
+  <script src="/index.js"></script>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+    integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous" />
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+    crossorigin="anonymous"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.27.0/min/vs/loader.js"></script>
+  <script src="json-refs.js"></script>
+  <style>
+    button {
+      margin: 4px;
+    }
+
+    h4 {
+      display: inline;
+    }
+
+    p {
+      word-wrap: break-word;
+    }
+
+    .sidenav,
+    .content {
+      overflow-y: auto;
+      height: calc(100vh - 57px);
+      max-height: calc(100vh - 57px);
+    }
+
+    .sidenav {
+      padding: 0;
+      display: flex;
+      flex-wrap: nowrap;
+      flex-direction: column;
+      justify-content: start;
+      align-items: stretch;
+      align-content: start
+    }
+
+    .card {
+      margin-bottom: 15px;
+    }
+
+    .card-header {
+      cursor: pointer;
+    }
+
+    .content,
+    .card-block,
+    .search-form {
+      padding: 15px;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 999;
+    }
+
+    .flex {
+      display: flex;
+    }
+
+    .server-select {
+      width: auto;
+      margin: 4px;
+    }
+
+    .nav-link {
+      color: #343a40 !important;
+    }
+
+    .nav-pills .nav-link.active,
+    .nav-pills .show>.nav-link {
+      color: #f8f9fa !important;
+      background-color: #343a40 !important;
+    }
+
+    .save-success {
+      color: rgb(66, 245, 69);
+    }
+
+    .save-failure {
+      color: rgb(245, 0, 0);
+    }
+
+    .card.disabled,
+    .nav-link.disabled {
+      opacity: 0.5;
+    }
+
+    .code-font {
+      font-family: "Source Code Pro";
+    }
+
+    .custom-request {
+      width: 100%;
+      /* height:100%; */
+    }
+
+    #save-success-modal {
+      display: none;
+      width: 100px;
+      background-color: rgb(66, 245, 69);
+      /* position: absolute; */
+    }
+
+    .modal {
+      /* border: solid 0px;
+      border-radius: 4px; */
+      z-index: 1;
+      left: 0;
+      bottom: 0;
+
+    }
+
+    .modal-content {
+      background: none;
+    }
+
+    .navbar {
+      justify-content: flex-start !important;
+    }
+
+    #splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      justify-content: center;
+      z-index: 9999;
+      display: flex;
+      width: 100%;
+      height: 100%;
+      background-color: white;
+
+    }
+  </style>
+</head>
+
+<body class="bg-light" id="app">
+  <!-- <div id="splash-screen">
+    <p>Loading...</p>
+  </div> -->
+  <nav class="navbar navbar-dark bg-dark sticky-top border-bottom">
+    <div>
+      <a class="navbar-brand">{{schema.info.title}} {{schema.info.version}}</a>
+    </div>
+    <div style="display:flex">
+      <div class="dropdown">
+        <button class="btn  btn-secondary btn-sm text-monospace dropdown-toggle" type="button"
+          data-toggle="dropdown">File</button>
+        <div class="dropdown-menu">
+          <p class="dropdown-item" @click="downloadSchema('json', 'application/json')">Download JSON</p>
+          <p class="dropdown-item" @click="downloadSchema('yaml', 'application/x-yaml')">Download YAML</p>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="btn  btn-secondary btn-sm text-monospace dropdown-toggle" type="button"
+          data-toggle="dropdown">Edit</button>
+        <div class="dropdown-menu">
+          <p class="dropdown-item" onclick="convertToJson()">Convert to JSON</p>
+          <p class="dropdown-item" onclick="convertToYaml()">Convert to YAML</p>
+        </div>
+      </div>
+    </div>
+    <div class="dropdown">
+      <button class="btn  btn-secondary btn-sm text-monospace dropdown-toggle" type="button" data-toggle="dropdown">
+        Generate Client
+      </button>
+      <div class="dropdown-menu">
+        <p class="dropdown-item" @click="downloadCodeFile('client-web-js')">JavaScript</p>
+        <!-- <p class="dropdown-item" @click="downloadCodeFile('client-web-ts')">TypsScript</p> -->
+        <!-- <p class="dropdown-item" @click="downloadCodeFile('client-web-nr')">NodeRED</p> -->
+      </div>
+    </div>
+    <div class="dropdown">
+      <button class="btn  btn-secondary btn-sm text-monospace dropdown-toggle" type="button" data-toggle="dropdown">
+        Generate Server
+      </button>
+      <div class="dropdown-menu">
+        <p class="dropdown-item" @click="downloadCodeFile('server-nodejs')">Node.JS</p>
+      </div>
+    </div>
+    <div class="dropdown">
+      <button class="btn  btn-secondary btn-sm text-monospace dropdown-toggle" type="button" data-toggle="dropdown">
+        Generate Spec
+      </button>
+      <div class="dropdown-menu">
+        <p class="dropdown-item" @click="downloadCodeFile('docs-html')">HTML</p>
+        <p class="dropdown-item" @click="downloadCodeFile('docs-md')">Markdown</p>
+        <p class="dropdown-item" @click="downloadCodeFile('spec-postman')">Postman</p>
+      </div>
+    </div>
+    <div style="display:flex">
+      <div id="toc" class="dropdown">
+        <button class="btn  btn-secondary btn-sm text-monospace dropdown-toggle" type="button" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">Go to method...</button>
+        <div class="dropdown-menu">
+          <p v-for="method in data" :key="method.id">
+            <a class="dropdown-item" :href="'#' + method.id" @click="goToMethod(method.id)">{{method.name}}</a>
+          </p>
+        </div>
+      </div>
+      <button class="btn btn-secondary btn-sm text-monospace" type="button" onclick="saveToServer()">
+        <i class="fa-solid fa-floppy-disk" id="save-to-server-icon"></i>
+        Save to Server
+      </button>
+      <button class="btn btn-secondary" type="button" id="save-success-modal">
+        <i class="fa-solid fa-floppy-disk"></i>
+        Success
+      </button>
+    </div>
+
+  </nav>
+
+  <div class="container-fluid">
+
+    <div class="row">
+      <div class="editor col-6" style="overflow-y: hidden !important;" id="editor">
+
+      </div>
+
+      <div class="content col-6" id="export">
+        <div class="card border" v-for="description in schema.info.description">
+          <div class="card-block">{{description}}</div>
+
+
+        </div>
+        <!-- <div class="card border">
+          <div class="card-block">
+            <h5>Server</h5>
+            <div class="flex">
+              <select class="form-select form-control server-select" id="server-protocol" v-model="serverProtocol" @change="updateServerProtocol">
+                <option>UDP</option>
+                <option>TCP</option>
+
+              </select>
+              <select v-if="protocolIsMqtt" class="form-select form-control server-select">
+                <option v-if="schema.topics" v-for="topic in schema.topics">{{topic}}</option>
+              </select>
+              <select class="form-select form-control server-select" id="server-address">
+                <option v-for="server in schema.servers" style="width:90%">{{server}}</option>
+              </select>
+
+            </div>
+          </div>
+        </div> -->
+        <div class="card method" :id="method.id" v-for="method in data">
+          <div class="card-header text-light bg-dark" data-toggle="collapse" @click="collapseMethod(method.id)">
+            <h4>
+              <span>{{method.name}}</span>
+
+              <div class="float-right">
+                <span class="badge badge-light"></span>
+                <div class="float-right">
+                  <span v-for="tag in method.tags" class="badge badge-light">{{tag}}</span>
+                </div>
+              </div>
+            </h4>
+          </div>
+
+          <div class="card-block collapse show">
+            <p>{{method.summary}}</p>
+            <p>{{method.description}}</p>
+            <hr />
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-12 border-right">
+                  <h5>Parameters</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+
+                      <tr v-for="par in method.params">
+                        <td>{{par.name}}</td>
+                        <td>{{par.type}}</td>
+                        <td>{{par.constraints}}</td>
+                        <td>{{par.description}}</td>
+                      </tr>
+
+                    </table>
+                  </div>
+                  <h5>Result</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Constraints</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr v-for="res in method.result">
+                        <td>{{res.name}}</td>
+                        <td>{{res.type}}</td>
+                        <td>{{res.constraints}}</td>
+                        <td>{{res.description}}</td>
+                      </tr>
+
+                    </table>
+                  </div>
+                  <h5>Errors</h5>
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover table-sm">
+                      <tr>
+                        <th>Code</th>
+                        <th>Message</th>
+                        <th>Description</th>
+                      </tr>
+                      <tr v-for="error in method.errors">
+                        <td>{{error.code}}</td>
+                        <td>{{error.message}}</td>
+                        <td>{{error.description}}</td>
+                      </tr>
+
+                    </table>
+                  </div>
+                  <div>
+                    <!-- <div class="border"> -->
+                    <div class="card">
+                      <h5>Request example</h5>
+                      <!-- <button type="button" class="btn btn-primary" style="width:100px"
+                        @click="sendRPC(method.requestExample)">Send</button> -->
+                      <pre class="bg-light">{{method.requestExample}}</pre>
+                    </div>
+
+                    <!-- </div> -->
+                    <div class="card">
+                      <h5>Response example</h5>
+                      <pre class="bg-light" :id="method.name + '_response'">{{method.responseExample}}</pre>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+  </div>
+
+
+  <script>
+    const httpRequest = new XMLHttpRequest();
+    const port = window.location.port;        // for making requests to the node-red docker container
+    const hostname = window.location.hostname;
+    let timer = null;                         // for monaco editor update timeout
+    /* a few litte helper abstractions*/
+    function EditorLanguage() {
+      return editor.getModel()._languageIdentifier['language'];
+    }
+    function yamlToJson(_yaml) {
+      //takes yaml string and converts to json object
+      return jrgen.yaml.parse(_yaml);
+    }
+    function jsonToYaml(_json) {
+      //takes json object and converts to yaml string
+      if (typeof (_json) == 'string') {
+        _json = JSON.parse(_json);
+      }
+      return jrgen.yaml.stringify(_json);
+    };
+    window.onload = () => {
+      console.log('loaded')
+      let promise = fetch(`http://${hostname}:${port}/jrgen-editor/state`)
+        .then(response => response.text())
+        .then(data => {
+
+          let language = JSON.parse(data).language;
+          console.log(language)
+          if (language == 'yaml') {
+            convertToYaml();
+          } else {
+            convertToJson();
+          }
+        }).then(() => {
+          editor.getAction('editor.action.formatDocument').run();
+          // let splashScreen = document.getElementById('splash-screen');
+          // splashScreen.style.display = 'none';
+        })
+
+
+
+
+    }
+    let schema = {
+      "$schema": "https://rawgit.com/mzernetsch/jrgen/master/jrgen-spec.schema.json",
+      "jrgen": "1.1",
+      "jsonrpc": "2.0",
+      "info": {
+        "title": "Example API",
+        "description": [
+          "An example api which handles various rpc requests.",
+          "This api follows the json-rpc 2.0 specification. More information available at http://www.jsonrpc.org/specification."
+        ],
+        "version": "1.0"
+      },
+      "definitions": {
+        "session": {
+          "type": "object",
+          "properties": {
+            "session_token": {
+              "description": "Bearer token of the created session.",
+              "examples": ["123456890"],
+              "type": "string",
+              "minLength": 1
+            },
+            "validity": {
+              "description": "Validity of the session token in seconds.",
+              "examples": [3600],
+              "type": "number",
+              "multipleOf": 1
+            }
+          },
+          "required": ["session_token"]
+        }
+      },
+      "methods": {
+        "Session.Login": {
+          "summary": "Creates a new session.",
+          "description": "Authenticates the user using the provided credentials and creates a new session.",
+          "tags": ["Session"],
+          "params": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "description": "Name of the user to create a session for.",
+                "examples": ["admin"],
+                "type": "string",
+                "minLength": 1
+              },
+              "password": {
+                "description": "Password of the user to create a session for.",
+                "examples": ["123456"],
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": ["name", "password"]
+          },
+          "result": {
+            "$ref": "#/definitions/session"
+          },
+          "errors": [
+            {
+              "description": "The provided credentials are invalid.",
+              "code": 1,
+              "message": "InvalidCredentials"
+            }
+          ]
+        },
+        "Session.Logout": {
+          "summary": "Destroys an existing session.",
+          "tags": ["Session"],
+          "result": {
+            "description": "Always '0'.",
+            "examples": [0],
+            "type": "number",
+            "minimum": 0,
+            "maximum": 0
+          },
+          "errors": [
+            {
+              "description": "Session could not be found.",
+              "code": 2,
+              "message": "NotFound"
+            }
+          ]
+        },
+        "Session.KeepAlive": {
+          "summary": "Refreshs an existing session.",
+          "description": "Refreshs an existing session so that it keeps alive and doesn't time out. This method does nothing but refreshing the timeout.",
+          "tags": ["Session"],
+          "result": {
+            "description": "Always '0'.",
+            "examples": [0],
+            "type": "number",
+            "minimum": 0,
+            "maximum": 0
+          },
+          "errors": [
+            {
+              "description": "Session could not be found.",
+              "code": 2,
+              "message": "NotFound"
+            }
+          ]
+        },
+        "User.Add": {
+          "summary": "Adds a new user.",
+          "tags": ["User"],
+          "params": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "description": "Name of the user to add.",
+                "examples": ["user"],
+                "anyOf": [
+                  { "type": "string", "minLength": 1 },
+                  { "type": "number", "multipleOf": 1 }
+                ]
+              },
+              "email": {
+                "description": "Email of the user to add.",
+                "examples": ["user@example.org"],
+                "type": "string",
+                "allOf": [{ "type": "string", "format": "email" }]
+              },
+              "address": {
+                "description": "Address of the user to add.",
+                "type": "array",
+                "items": [
+                  {
+                    "description": "Address number.",
+                    "examples": [1600],
+                    "type": "number",
+                    "minimum": 1
+                  },
+                  {
+                    "description": "Name of the street.",
+                    "examples": ["Pennsylvania"],
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "description": "Type of the street.",
+                    "examples": ["Avenue"],
+                    "type": "string",
+                    "enum": ["Street", "Avenue", "Boulevard"]
+                  },
+                  {
+                    "description": "City quadrant of the address",
+                    "examples": ["NW"],
+                    "type": "string",
+                    "enum": ["NW", "NE", "SW", "SE"]
+                  }
+                ]
+              },
+              "password": {
+                "description": "Password of the user to add.",
+                "examples": ["1234567890"],
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": ["name", "email", "password"]
+          },
+          "result": {
+            "description": "Always '0'.",
+            "examples": [0],
+            "type": "number",
+            "minimum": 0,
+            "maximum": 0
+          },
+          "errors": [
+            {
+              "description": "A user with that name already exists.",
+              "code": 3,
+              "message": "Already exists"
+            }
+          ]
+        },
+        "User.Delete": {
+          "summary": "Deletes an existing user.",
+          "tags": ["User"],
+          "params": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "description": "Name of the user to delete.",
+                    "examples": ["user"],
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^(A|B)\\-.*$"
+                  }
+                },
+                "required": ["name"]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "description": "Id of the user to delete.",
+                    "examples": ["1"],
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": ["id"]
+              }
+            ]
+          },
+          "result": {
+            "description": "Always '0'.",
+            "examples": [0],
+            "type": "number",
+            "minimum": 0,
+            "maximum": 0
+          },
+          "errors": [
+            {
+              "description": "A user with that name could not be found.",
+              "code": 2,
+              "message": "Not found"
+            }
+          ]
+        },
+        "User.GetAll": {
+          "summary": "Returns all users.",
+          "description": "This method returns an array with information about all existing users.",
+          "tags": ["User"],
+          "result": {
+            "description": "List of all existing users.",
+            "type": "array",
+            "items": {
+              "description": "Information about a user.",
+              "type": "object",
+              "properties": {
+                "name": {
+                  "description": "Name of the user.",
+                  "examples": ["user"],
+                  "type": "string",
+                  "minLength": 1
+                },
+                "email": {
+                  "description": "Email of the user.",
+                  "examples": ["user@example.org"],
+                  "type": "string",
+                  "format": "email"
+                },
+                "address": {
+                  "description": "Address of the user to add.",
+                  "type": "array",
+                  "items": [
+                    {
+                      "name": "number",
+                      "description": "Address number.",
+                      "examples": [1600],
+                      "type": "number",
+                      "minimum": 1
+                    },
+                    {
+                      "name": "street_name",
+                      "description": "Name of the street.",
+                      "examples": ["Pennsylvania"],
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "name": "street_type",
+                      "description": "Type of the street.",
+                      "examples": ["Avenue"],
+                      "type": "string",
+                      "enum": ["Street", "Avenue", "Boulevard"]
+                    },
+                    {
+                      "name": "direction",
+                      "description": "City quadrant of the address",
+                      "examples": ["NW"],
+                      "type": "string",
+                      "enum": ["NW", "NE", "SW", "SE"]
+                    }
+                  ]
+                }
+              },
+              "required": ["name", "email", "address"]
+            }
+          }
+        }
+      }
+    }
+
+    /*---------------------------------------- MONACO EDITOR ----------------------------------------*/
+
+    require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.27.0/min/vs' } });
+
+    require(['vs/editor/editor.main'], function () {
+      editor = monaco.editor.create(document.getElementById('editor'), {
+        value: '{}',
+        language: 'json',
+        scrollbar: {
+          vertical: 'auto',
+          horizontal: 'auto'
+        },
+        theme: 'vs-dark',
+        automaticLayout: true,
+        autoIndent: true,
+        formatOnPaste: true,
+        formatOnSave: true,
+        formatOnType: true,
+        formatOnLoad: true,
+        tabSize: 2,
+        insertSpace: true,
+        wordWrap: 'on'
+      });
+
+      // define function to run for when the contents in editor are changed
+      const model = editor.getModel();
+      model.onDidChangeContent(function (event) {
+        console.log("now")
+        if (timer) {
+          // when something changes, reset the timer
+          clearTimeout(timer);
+        }
+        timer = setTimeout(() => {
+          regenerateArtifacts()
+        }, 1000);
+      })
+
+      // get the schema from server and set it as the value of the editor
+      fetch(`http://${hostname}:${port}/jrgen-editor/schema.json`)
+        .then(response => response.text())
+        .then(data => {
+          editor.setValue(data);
+        })
+    });
+
+
+    // does more than just getting the value of editor
+    // also parses the schema into an artifact and assigns it to the Vue object
+    async function regenerateArtifacts() {
+      schema = editor.getValue()
+
+      // if it's in yaml, convert to json
+      let language = EditorLanguage() //editor.getModel()._languageIdentifier['language']
+      if (language == 'yaml') {
+        schema = JSON.stringify(jrgen.yaml.parse(schema));
+      }
+
+      schema = JSON.parse(schema)
+
+      // create the jrgen artifact from the schema, this is used to populate the page
+      let artifacts = await jrgen.generateArtifacts(schema)
+
+      // method objects are in an array, these next few lines create a look up
+      // so we can get the index of a method by name and easily get the method's object from the array
+      let methods = {};
+      let index = 0
+      artifacts.forEach((method) => {
+        methods[method.name] = index;
+        index += 1;
+      })
+      artifacts['methods'] = methods
+
+      // asing the artifacts to Vue's data object
+      app.data = artifacts;
+      app.schema = schema;
+
+    }
+
+    /*-------------------------- LANGUAGE CONVERSION --------------------------*/
+    function convertToJson() {
+      let language = editor.getModel()._languageIdentifier['language'];
+      if (language == 'json') {
+        return
+      } else {
+        let jsonSchema = JSON.stringify(jrgen.yamlToJson(editor.getValue()))
+        editor.setValue(jsonSchema);
+        monaco.editor.setModelLanguage(editor.getModel(), 'json');
+        editor.getAction('editor.action.formatDocument').run();
+        let options = {
+          method: 'PUT',
+          body: JSON.stringify({ 'language': 'json' }),
+          headers: { 'Content-Type': 'application/json' }
+        }
+        fetch(`http://${hostname}:${port}/jrgen-editor/state/language`, options)
+          .then(response => response.text())
+      }
+    }
+    function convertToYaml() {
+      let language = editor.getModel()._languageIdentifier['language'];
+      if (language == 'yaml') {
+        return
+      } else {
+        let yamlSchema = jrgen.jsonToYaml(editor.getValue())
+        editor.setValue(yamlSchema);
+        monaco.editor.setModelLanguage(editor.getModel(), 'yaml');
+        // set state.language
+        let options = {
+          method: 'PUT',
+          body: JSON.stringify({ 'language': 'yaml' }),
+          headers: { 'Content-Type': 'application/json' }
+        }
+        fetch(`http://${hostname}:${port}/jrgen-editor/state/language`, options)
+          .then(response => response.text())
+      }
+    }
+    // saves both the schema and the artifact to the server
+    // saved in the docker directory /data/jrgen-editor/<file-name>.json
+    function saveSchema(schema) {
+      let options = {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: schema
+      }
+      fetch(`http://${hostname}:${port}/jrgen-editor/schema.json`, options)
+        .then(response => response)
+        .then(data => {
+          console.log(data)
+          if (data.status == 200) {
+
+            let saveIcon = document.getElementById('save-to-server-icon');
+            saveIcon.classList.add('save-success');
+            let modalTimer = setTimeout(() => {
+              saveIcon.classList.remove('save-success');
+            }, 3000)
+          } else {
+            console.log('error', err);
+            let saveIcon = document.getElementById('save-to-server-icon');
+            saveIcon.classList.add('save-failure');
+            let modalTimer = setTimeout(() => {
+              saveIcon.classList.remove('save-failure');
+            }, 3000)
+          }
+        }).catch(err => {
+          console.log('error', err);
+          let saveIcon = document.getElementById('save-to-server-icon');
+          saveIcon.classList.add('save-failure');
+          let modalTimer = setTimeout(() => {
+            saveIcon.classList.remove('save-failure');
+          }, 3000)
+        })
+    }
+    function saveToServer() {
+      schema = editor.getValue();
+      if (EditorLanguage() == 'yaml') {
+        schema = JSON.stringify(jrgen.yamlToJson(schema));
+
+      }
+
+      saveSchema(schema)
+
+      let artifact = app.data;
+      httpRequest.open('PUT', `http://${hostname}:${port}/jrgen-editor/artifact.json`);
+      httpRequest.setRequestHeader('Content-Type', 'application/json');
+      httpRequest.onload = function () {
+        let data = httpRequest.response;
+      }
+      httpRequest.send(JSON.stringify(artifact))
+
+    }
+    // needs more work, especially in back-end, to save just the documentation, no Vue, no Monaco
+    function saveWebPage() {
+      let html = document.getElementById('app').outerHTML
+
+      httpRequest.open('PUT', `http://${hostname}:${port}/jrgen-editor/ui.html`);
+      httpRequest.setRequestHeader('Content-Type', 'text/html');
+      httpRequest.onload = function () {
+        let data = httpRequest.response;
+      }
+      httpRequest.send(html)
+    }
+    function sendRPC(requestExample) {
+      // lots of work needed on this functionality
+      // basically will send an RPC to a defined server
+      let serverProtocol = document.getElementById('server-protocol').value;
+      let serverAddress = document.getElementById('server-address').value.split(':');
+
+      fetch(`http://${hostname}:${port}/jrgen-editor/rpc-request`, {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: {
+          protocol: serverProtocol,
+          host: serverAddress[0],
+          port: serverAddress[1],
+          message: requestExample
+        }
+      })
+        .then(response => response.text())
+        .then(data => {
+
+          let methodName = JSON.parse(requestExample).method;
+          let index = app.data.methods[methodName];
+          console.log(index)
+          app.data[index].responseExample = data
+
+        })
+    }
+
+    function downloadDocument(name, contents, extension, mimetype) {
+      let blob = new Blob([contents], { type: mimetype });
+      let url = URL.createObjectURL(blob);
+      let link = document.createElement('a');
+      link.href = url;
+      console.log(extension)
+      link.download = `${name}.${extension}`;
+      link.click();
+      URL.revokeObjectURL(url);
+      link.remove()
+    }
+    var api_doc = {
+      data() {
+        return {
+          data: {},
+          schema: schema
+        }
+      },
+      methods: {
+        downloadSchema(language, mimeType) {
+          let schema = editor.getValue();
+          if (EditorLanguage() == language) {
+            //
+          } else {
+            if (language == 'yaml') {
+              schema = jrgen.jsonToYaml(schema);
+            } else {
+              schema = JSON.stringify(jrgen.yamlToJson(schema));
+            }
+          }
+          downloadDocument('api-spec', schema, language, mimeType)
+        },
+        goToMethod(methodId) {
+          // used by drop menu to go to a specific method's div
+          const element = document.getElementById(methodId);
+          element.scrollIntoView({ behavior: "smooth" });
+        },
+
+        sendRPC(requestExample) {
+          // lots of work needed on this functionality
+          // basically will send an RPC to a defined server
+          let serverProtocol = document.getElementById('server-protocol').value;
+          let serverAddress = document.getElementById('server-address').value.split(':');
+          let body = {
+            protocol: serverProtocol,
+            host: serverAddress[0],
+            port: serverAddress[1],
+            message: requestExample
+          }
+          body = JSON.stringify(body)
+          fetch(`http://${hostname}:${port}/jrgen-editor/rpc-request`, {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body
+          })
+            .then(response => response.text())
+            .then(data => {
+
+              let methodName = JSON.parse(requestExample).method;
+              let index = app.data.methods[methodName];
+              console.log(index)
+              app.data[index].responseExample = data
+
+            })
+        },
+        async downloadCodeFile(targetArtifact) {
+          let codeFile = await fetch(`http://${hostname}:${port}/jrgen-editor/blueprints/${targetArtifact}`)
+            .then(response => response.text())
+            .then(data => {
+              return data;
+            });
+          let ext;
+          let mime;
+          switch (targetArtifact) {
+            case 'client-web-js':
+              ext = 'js';
+              mime = 'application/javascript';
+              break;
+            case 'client-web-ts':
+              ext = 'ts';
+              mime = 'application/typescript'
+              break;
+            case 'client-web-nr':
+              ext = 'json';
+              mime = 'application/json';
+              break;
+            case 'docs-html':
+              ext = 'html';
+              mime = 'text/html';
+              break;
+            case 'docs-md':
+              ext = 'md';
+              mime = 'text/markdown';
+              break;
+          }
+          downloadDocument(name, codeFile, ext, mime);
+
+        },
+        collapseMethod(methodId) {
+          let methodDiv = document.querySelector(`#${methodId} .collapse`);
+          if (methodDiv.classList.contains('show')) {
+            methodDiv.classList.remove('show')
+          } else {
+            methodDiv.classList.add('show')
+          }
+        },
+        updateServerProtocol(){
+          this.protocolIsMqtt = (this.serverProtocol === 'MQTT');
+        }
+      },
+      computed: {
+        dynamicTitle() {
+          return `${this.schema.info.title} ${this.schema.info.version}`
+        }
+
+      }
+    }
+
+
+
+    window.app = Vue.createApp(api_doc).mount("#app")
+  </script>
+</body>
+
+</html>

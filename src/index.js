@@ -1,26 +1,16 @@
+const YAML = require('yaml')
 
-// import * as utils from "./utils.js"
-// import * as gen from "./doc-html-blueprint.js"
-// const $RefParser = require("json-schema-ref-parser");
+/*-----------------------------------------------------------------
+----------------------- JSON SCHEMA HANDLING ----------------------
+-----------------------------------------------------------------*/
 
-normalizeMultiLineString = (multiLineString, separator) => {
-  if (!multiLineString) {
-    return "";
-  }
-  if (Array.isArray(multiLineString)) {
-    return multiLineString.join(separator || "\n");
-  }
-  return multiLineString.toString();
-};
-
-generateRequestExample = (methodName, paramsSchema) => {
-  let example =  {
+function generateRequestExample(methodName, paramsSchema) {
+  let example = {
     jsonrpc: "2.0",
     id: "1234567890",
     method: methodName,
     params: generateExample(paramsSchema),
   }
-  //console.log("request example = ",example)
   return JSON.stringify(
     {
       jsonrpc: "2.0",
@@ -33,7 +23,7 @@ generateRequestExample = (methodName, paramsSchema) => {
   );
 };
 
-generateResponseExample = (resultSchema) => {
+function generateResponseExample(resultSchema) {
   return JSON.stringify(
     {
       jsonrpc: "2.0",
@@ -45,15 +35,12 @@ generateResponseExample = (resultSchema) => {
   );
 };
 
-generateExample = (schema) => {
-  console.log('generating example')
+function generateExample(schema) {
   if (!schema) {
-   // console.log('generating example: no schema')
     return;
   }
 
   if (schema.default !== undefined) {
-   // console.log('generating example schema.default !== undefined')
     return schema.default;
   }
 
@@ -91,21 +78,19 @@ generateExample = (schema) => {
     .filter((item) => !!item)
     .flat()) {
     const example = generateExample(item);
-    
+
     if (example) {
-      
+
       return example;
-      
+
     }
   }
 };
 
-parsePropertyList = (name, schema) => {
-  console.log('parsing property')
+function parsePropertyList(name, schema) {
   if (!schema) {
     return [];
   }
-
   if (schema.allOf) {
     for (const item of schema.allOf) {
       for (const key of Object.keys(item)) {
@@ -156,9 +141,9 @@ parsePropertyList = (name, schema) => {
       }, [])
       .join(", "),
     schema: JSON.stringify(schema, null, 2),
-    
+
   });
-  //console.log(entries)
+
   if (schema.type === "array") {
     if (Array.isArray(schema.items)) {
       schema.items.forEach((item, index) => {
@@ -210,45 +195,62 @@ parsePropertyList = (name, schema) => {
   return entries;
 };
 
-resolveSchemaRefs = async (schema) => {
-  return new Promise((resolve) => {
-    $RefParser.dereference(schema, (error, schema) => {
-      if (error) {
-        throw error;
-      }
-      resolve(schema);
-    });
-  });
+async function resolveSchemaRefs(schema) {
+  return JsonRefs.resolveRefs(schema)
+    .then(function (res) {
+      console.log(res)
+      return (res.resolved)
+    }, function (err) {
+      console.log(err.stack)
+    })
 };
+
 function generateBlueprint(schema) {
-	return Object.keys(schema.methods).map((key) => {
-	  const methodSchema = schema.methods[key];
-	  console.log(parsePropertyList("params", methodSchema.params));
-	  // console.log('summary=', methodSchema.summary)
-	  // console.log('params=', methodSchema.params)
-	  // console.log('generated response example=',generateResponseExample(methodSchema.result))
-	  return {
-		id: key.replace(/\./g, "_"),
-		name: key,
-		summary: methodSchema.summary,
-		description: methodSchema.description,
-		constraints: methodSchema.constraints,
-		tags: methodSchema.tags,
-		params: parsePropertyList("params", methodSchema.params),
-		result: parsePropertyList("result", methodSchema.result),
-		errors: methodSchema.errors,
-		requestExample: generateRequestExample(key, methodSchema.params),
-		responseExample: generateResponseExample(methodSchema.result),
-	  };
-	});
+  return Object.keys(schema.methods).map((key) => {
+    const methodSchema = schema.methods[key];
+    return {
+      id: key.replace(/\./g, "_"),
+      name: key,
+      summary: methodSchema.summary,
+      description: methodSchema.description,
+      constraints: methodSchema.constraints,
+      tags: methodSchema.tags,
+      params: parsePropertyList("params", methodSchema.params),
+      result: parsePropertyList("result", methodSchema.result),
+      errors: methodSchema.errors,
+      requestExample: generateRequestExample(key, methodSchema.params),
+      responseExample: generateResponseExample(methodSchema.result),
+    };
+  });
+}
+
+async function generateArtifacts(schema) {
+  schema = await resolveSchemaRefs(schema) // resolve (or "expand") references
+  const blueprint = generateBlueprint(schema)
+  return blueprint
+
+}
+
+/*--------------------------------------------------
+------------------- YAML PARSING -------------------
+--------------------------------------------------*/
+
+function yamlToJson(_yaml) {
+  return YAML.parse(_yaml);
+}
+
+function jsonToYaml(_json) {
+  if (typeof (_json) == 'string') {
+    _json = JSON.parse(_json);
   }
-  
+  return YAML.stringify(_json);
+}
 
-
-function build_data(schema){
-// const schema = await utils.loadSchema(schemaFile) //this will be taken from the monaco editor instead
-const blueprint = generateBlueprint(schema)
-return blueprint
+module.exports = {
+  generateArtifacts,
+  yaml: YAML,
+  yamlToJson,
+  jsonToYaml
 
 }
 
